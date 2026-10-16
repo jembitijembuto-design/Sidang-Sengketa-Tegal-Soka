@@ -11,17 +11,17 @@ export const pendalamanSets: PersonSet[] = [
       [
         { id: 9, role: 'Kamulyan jagad', text: 'Klaim adat yang tidak tercatat otomatis bertentangan dengan hukum positif yang berlaku, sehingga tidak dapat dijadikan dasar kepemilikan.' },
         { id: 8, role: 'Kamulyan jagad', text: 'Pencatatan adalah syarat mutlak pengakuan hak, sehingga klaim tanpa pencatatan tidak sah dan tidak memiliki legitimasi hukum.' },
-        { id: 7, role: 'Kamulyan jagad', text: 'Klaim kepemilikan yang tidak tercatat dalam register resmi hanyalah asumsi belaka, yang tidak memiliki kekuatan mengikat dan tidak dapat dipertahan[...]' },
-        { id: 6, role: 'urip kepenak', text: 'Penguasaan fisik atas tanah tanpa pengakuan negara tidak lebih dari tindakan menguasai tanpa legitimasi, yang tidak memiliki nilai hukum dan tidak dapat d[...]' },
-        { id: 5, role: 'urip kepenak', text: 'Klaim adat yang berdiri tanpa dukungan pencatatan negara kehilangan kekuatan hukum, karena pengakuan adat hanya berlaku bila tidak bertentangan denga[...]' },
-        { id: 4, role: 'urip kepenak', text: 'Seseorang yang tidak pernah tercatat dalam register resmi tidak dapat menyebut diri sebagai pemilik sah, karena pencatatan adalah syarat pengakuan ya[...]' },
-        { id: 3, role: 'duit semilyar', text: 'Tanah yang tidak tercatat dalam daftar resmi otomatis kembali ke penguasaan negara, sehingga klaim individu yang diajukan tanpa pencatatan kehilanga[...]' },
-        { id: 2, role: 'duit semilyar', text: 'Arsip tanah kosong dari nama pemilik menjadikan klaim kepemilikan tidak lebih dari dugaan subjektif, yang tidak memiliki kekuatan pembuktian dan tid[...]' },
-        { id: 1, role: 'duit semilyar', text: 'Catatan resmi negara tidak pernah mencantumkan bidang tanah ini, sehingga klaim pribadi yang diajukan berdiri di atas penguasaan fisik semata, tanpa legi[...]' },
+        { id: 7, role: 'Kamulyan jagad', text: 'Klaim kepemilikan yang tidak tercatat dalam register resmi hanyalah asumsi belaka, yang tidak memiliki kekuatan mengikat dan tidak dapat dipertahankan di muka majelis.' },
+        { id: 6, role: 'urip kepenak', text: 'Penguasaan fisik atas tanah tanpa pengakuan negara tidak lebih dari tindakan menguasai tanpa legitimasi, yang tidak memiliki nilai hukum dan tidak dapat dipertahankan.' },
+        { id: 5, role: 'urip kepenak', text: 'Klaim adat yang berdiri tanpa dukungan pencatatan negara kehilangan kekuatan hukum, karena pengakuan adat hanya berlaku bila tidak bertentangan dengan kepentingan publik.' },
+        { id: 4, role: 'urip kepenak', text: 'Seseorang yang tidak pernah tercatat dalam register resmi tidak dapat menyebut diri sebagai pemilik sah, karena pencatatan adalah syarat pengakuan yang diatur oleh sistem hukum.' },
+        { id: 3, role: 'duit semilyar', text: 'Tanah yang tidak tercatat dalam daftar resmi otomatis kembali ke penguasaan negara, sehingga klaim individu yang diajukan tanpa pencatatan kehilangan legitimasi administratif.' },
+        { id: 2, role: 'duit semilyar', text: 'Arsip tanah kosong dari nama pemilik menjadikan klaim kepemilikan tidak lebih dari dugaan subjektif, yang tidak memiliki kekuatan pembuktian dan tidak dapat diandalkan di muka majelis.' },
+        { id: 1, role: 'duit semilyar', text: 'Catatan resmi negara tidak pernah mencantumkan bidang tanah ini, sehingga klaim pribadi yang diajukan berdiri di atas penguasaan fisik semata, tanpa legitimasi formal.' },
       ],
       [
-        { id: 9, role: 'Kamulyan jagad', text: 'Klaim adat yang diposisikan lebih kuat daripada kewajiban pencatatan negara bertentangan dengan prinsip hukum agraria, sehingga tidak dapat diakui.[...]' },
-        { id: 8, role: 'Kamulyan jagad', text: 'Klaim adat tanpa pencatatan resmi tidak memiliki kekuatan hukum, sehingga tidak dapat dijadikan dasar kepemilikan dan tidak dapat dipertahankan di penga[...]' },
+        { id: 9, role: 'Kamulyan jagad', text: 'Klaim adat yang diposisikan lebih kuat daripada kewajiban pencatatan negara bertentangan dengan prinsip hukum agraria, sehingga tidak dapat diakui.' },
+        { id: 8, role: 'Kamulyan jagad', text: 'Klaim adat tanpa pencatatan resmi tidak memiliki kekuatan hukum, sehingga tidak dapat dijadikan dasar kepemilikan dan tidak dapat dipertahankan di pengadilan.' },
         { id: 7, role: 'Kamulyan jagad', text: 'Klaim adat yang tidak memenuhi kewajiban pencatatan negara tidak memiliki kekuatan hukum, sehingga tidak dapat dipertahankan.' },
         { id: 6, role: 'urip kepenak', text: 'Kewajiban pencatatan tanah menjadikan klaim adat tanpa pencatatan kehilangan legitimasi, sehingga tidak dapat dijadikan dasar kepemilikan.' },
         { id: 5, role: 'urip kepenak', text: 'Klaim adat yang bertentangan dengan kepentingan negara dalam pencatatan tanah otomatis gugur, sehingga tidak dapat dipertahankan.' },
@@ -30,13 +30,22 @@ export const pendalamanSets: PersonSet[] = [
         { id: 2, role: 'duit semilyar', text: 'Klaim adat tanpa pencatatan sama dengan penguasaan liar, yang tidak memiliki legitimasi hukum dan tidak dapat dijadikan dasar kepemilikan.' },
         { id: 1, role: 'duit semilyar', text: 'Klaim kepemilikan tanpa dokumen resmi tidak memiliki bukti otentik, sehingga tidak dapat diakui oleh hukum dan tidak memiliki legitimasi.' },
       ],
+      // Duel sengit: tujuan agar Jumiati paham pertanyaannya dan dapat menyerang balik lawan
+      [
+        { id: 1, role: 'instruksi', text: 'Tujuan: sebelum menjawab, ringkas pertanyaan ini dengan kata-kata Anda sendiri supaya majelis yakin Anda paham inti persoalan.' },
+        { id: 2, role: 'duit semilyar', text: 'Duel sengit — kepada Ridwan: tunjukkan bukti konkrit mengapa pencatatan negara tidak selalu mengalahkan klaim adat; jelaskan dua situasi di mana adat layak diberi bobot pembuktian lebih kuat.' },
+        { id: 3, role: 'urip kepenak', text: 'Duel sengit — kepada Susanto: bantah klaim bahwa penguasaan fisik tanpa pencatatan tidak pernah memiliki legitimasi; sebutkan argumen yuridis yang mendukung pengakuan material.' },
+        { id: 4, role: 'Kamulyan jagad', text: 'Duel sengit — kepada Suprapti: jika berkas resmi kosong, bagaimana Anda menyusun rangka pembuktian alternatif yang kuat di muka majelis (alat bukti dan saksi)?' },
+        { id: 5, role: 'duit semilyar', text: 'Duel sengit — kepada Eka: jelaskan mekanisme perbaikan administratif yang Anda anggap cukup agar klaim adat tetap dipertimbangkan tanpa membatalkan hak pihak ketiga.' },
+        { id: 6, role: 'Kamulyan jagad', text: 'Duel sengit — cross-check: jelaskan secara singkat tiga pertanyaan kritis yang harus Anda tanyakan kepada saksi saat membuktikan klaim adat.' },
+      ],
     ],
   },
   {
     person: 'Eka',
     sets: [
       [
-        { id: 9, role: 'Kamulyan jagad', text: 'Apakah sistem hukum memberi perlindungan kepada pihak yang sudah melaksanakan kewajibannya meski tanda bukti resmi belum lengkap di hadapan majelis[...]' },
+        { id: 9, role: 'Kamulyan jagad', text: 'Apakah sistem hukum memberi perlindungan kepada pihak yang sudah melaksanakan kewajibannya meski tanda bukti resmi belum lengkap di hadapan majelis?' },
         { id: 8, role: 'Kamulyan jagad', text: 'Apa fungsi tanda bukti resmi terhadap kepentingan yang secara isi sudah terbentuk sebelum tanda bukti itu dibuat di muka majelis?' },
         { id: 7, role: 'Kamulyan jagad', text: 'Bagaimana sistem hukum menilai pelengkapan berkas resmi yang dilakukan dengan itikad baik pada waktu berikutnya di hadapan majelis?' },
         { id: 6, role: 'urip kepenak', text: 'Sejauh mana jarak waktu antara peristiwa dan pemberian tanda bukti resmi memengaruhi kekuatan alat bukti menurut sistem hukum?' },
@@ -56,6 +65,14 @@ export const pendalamanSets: PersonSet[] = [
         { id: 3, role: 'duit semilyar', text: 'Apakah pelengkapan berkas resmi kemudian mengubah isi peristiwa hukum yang sudah terjadi sebelumnya menurut sistem hukum?' },
         { id: 2, role: 'duit semilyar', text: 'Apa akibat hukum dari pemberian tanda bukti resmi yang baru dilakukan setelah melewati batas waktu di muka majelis?' },
         { id: 1, role: 'duit semilyar', text: 'Apa arti yuridis dari pelengkapan berkas resmi yang dilakukan setelah kepentingan para pihak sudah terbentuk menurut sistem hukum?' },
+      ],
+      // Duel sengit: Eka harus paham lalu menyerang balik
+      [
+        { id: 1, role: 'instruksi', text: 'Tujuan: ulangi gagasan inti dengan singkat dan sebut dua elemen bukti yang akan Anda utarakan sebelum memasuki duel.' },
+        { id: 2, role: 'duit semilyar', text: 'Duel sengit — kepada Ridwan: bagaimanakah Anda menawar bobot pembuktian antara pencatatan formal dan bukti pelaksanaan nyata? Jelaskan satu contoh yuridis dengan argumen kontra.' },
+        { id: 3, role: 'urip kepenak', text: 'Duel sengit — kepada Susanto: bantah klaim bahwa tanda bukti resmi selalu sekunder terhadap fakta materiil; tunjukkan batasan situasi di mana berkas resmi mendominasi.' },
+        { id: 4, role: 'Kamulyan jagad', text: 'Duel sengit — kepada Jumiati: uraikan strategi membangun bukti alternatif (saksi, korespondensi, saksi ahli) yang sanggup menandingi dokumen formal.' },
+        { id: 5, role: 'duit semilyar', text: 'Duel sengit — cross-examination: sebut tiga pertanyaan yang akan Anda ajukan untuk mendestabilisasi klaim lawan tentang kepemilikan tanpa pencatatan.' },
       ],
     ],
   },
@@ -84,6 +101,14 @@ export const pendalamanSets: PersonSet[] = [
         { id: 2, role: 'duit semilyar', text: 'Apa akibat hukum apabila terdapat kesalahan identitas pihak atau uraian objek dalam berkas resmi menurut sistem hukum?' },
         { id: 1, role: 'duit semilyar', text: 'Bagaimana sistem hukum memandang kelanjutan proses birokrasi apabila salah satu pihak mengalami perubahan status di muka majelis?' },
       ],
+      // Duel sengit: Suprapti harus paham dan memimpin kontra-argumen administratif
+      [
+        { id: 1, role: 'instruksi', text: 'Tujuan: jelaskan secara singkat langkah administratif yang akan Anda tuntut agar majelis memahami solusi korektif tanpa merusak kepastian hukum.' },
+        { id: 2, role: 'duit semilyar', text: 'Duel sengit — kepada Eka: jika data administratif saling bertentangan, bagaimana Anda menimbang prioritas antar dokumen dan bukti material?' },
+        { id: 3, role: 'urip kepenak', text: 'Duel sengit — kepada Ridwan: jelaskan prosedur perbaikan yang perlu dilakukan agar klaim tidak hilang tetapi juga tidak merugikan pihak yang sudah memiliki berkas.' },
+        { id: 4, role: 'Kamulyan jagad', text: 'Duel sengit — kepada Jumiati: apakah ada kondisi di mana koreksi administratif harus diutamakan demi kepastian hukum; jelaskan dengan contoh.' },
+        { id: 5, role: 'duit semilyar', text: 'Duel sengit — cross-examination: sebut tiga bukti yang menurut Anda paling menentukan saat memperbaiki kesalahan uraian objek.' },
+      ],
     ],
   },
   {
@@ -111,6 +136,14 @@ export const pendalamanSets: PersonSet[] = [
         { id: 2, role: 'duit semilyar', text: 'Bagaimana sistem hukum menilai akibat hukum kekurangan perbuatan pertama terhadap perbuatan lanjutan di muka majelis?' },
         { id: 1, role: 'duit semilyar', text: 'Apakah ketiadaan berkas resmi selalu meniadakan perbuatan hukum yang sudah dilaksanakan menurut sistem hukum?' },
       ],
+      // Duel sengit: Susanto harus paham esensi bukti non-formal
+      [
+        { id: 1, role: 'instruksi', text: 'Tujuan: jelaskan dua garis bukti non-formal (pelaksanaan nyata, saksi) yang Anda akan pakai dan mengapa itu meyakinkan.' },
+        { id: 2, role: 'duit semilyar', text: 'Duel sengit — kepada Eka: jika klaim Anda bertentangan dengan catatan resmi, bagaimana Anda rangkai narasi faktual yang tahan uji di majelis?' },
+        { id: 3, role: 'urip kepenak', text: 'Duel sengit — kepada Ridwan: sebutkan kelemahan paling lemah dari bukti administratif yang dapat Anda ekspos untuk menempatkan bukti non-formal di depan.' },
+        { id: 4, role: 'Kamulyan jagad', text: 'Duel sengit — kepada Jumiati: bagaimana Anda menilai kredibilitas saksi dan mengaitkannya dengan bukti-bukti lain secara sistematis?' },
+        { id: 5, role: 'duit semilyar', text: 'Duel sengit — cross-challenge: sebut dua celah hukum yang sering dieksploitasi untuk menolak klaim tanpa pencatatan, lalu bagaimana Anda menutupnya.' },
+      ],
     ],
   },
   {
@@ -137,6 +170,14 @@ export const pendalamanSets: PersonSet[] = [
         { id: 3, role: 'duit semilyar', text: 'Bagaimana seharusnya majelis memperlakukan kepentingan yang secara isi sudah nyata namun belum memiliki tanda bukti resmi?' },
         { id: 2, role: 'duit semilyar', text: 'Apakah keberadaan kepentingan selalu bergantung pada diterbitkannya berkas resmi oleh pejabat menurut sistem hukum?' },
         { id: 1, role: 'duit semilyar', text: 'Pada tahap mana kepentingan memperoleh pengakuan di muka majelis — sejak perbuatannya atau sejak diberi tanda bukti resmi?' },
+      ],
+      // Duel sengit: Ridwan harus paham garis batas birokrasi vs materiil
+      [
+        { id: 1, role: 'instruksi', text: 'Tujuan: rumuskan dua kriteria yang akan Anda pakai untuk memutuskan prioritas antara dokumen birokrasi dan bukti materiil.' },
+        { id: 2, role: 'duit semilyar', text: 'Duel sengit — kepada Susanto: bagaimana Anda menimbang koreksi administratif terhadap dokumen lama yang berkontradiksi dengan fakta lapangan?' },
+        { id: 3, role: 'urip kepenak', text: 'Duel sengit — kepada Eka: jelaskan metode pembobotan bukti materiil agar majelis dapat mengikuti logika yuridis Anda.' },
+        { id: 4, role: 'Kamulyan jagad', text: 'Duel sengit — kepada Jumiati: jika bukti administratif terlambat muncul, bagaimana Anda menilai itikad baik dan efeknya terhadap posisi kepentingan?' },
+        { id: 5, role: 'duit semilyar', text: 'Duel sengit — cross-probe: sebut dua preseden hukum (atau analogi) yang akan Anda pakai untuk membela posisi bahwa fakta materiil dapat mengalahkan catatan birokrasi.' },
       ],
     ],
   },
