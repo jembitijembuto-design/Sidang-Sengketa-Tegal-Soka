@@ -209,3 +209,29 @@ export const pendalamanSets: PersonSet[] = [
     ],
   },
 ];
+
+// Helper utilities for testing / UI integration
+export type QuestionItem = {
+  setIndex: number;
+  id: number;
+  role: string;
+  text: string;
+};
+
+// Kembalikan semua pertanyaan (diratakan) milik seorang peserta
+export function getQuestionsForPerson(person: string): QuestionItem[] {
+  const p = pendalamanSets.find((ps) => ps.person.toLowerCase() === person.toLowerCase());
+  if (!p) return [];
+  return p.sets.flatMap((set, setIndex) =>
+    set.map((q) => ({ setIndex, id: q.id, role: q.role, text: q.text }))
+  );
+}
+
+// Simulasi jawaban otomatis untuk pengujian: setiap pertanyaan akan mendapat jawaban placeholder
+export function simulateAnswersForPerson(person: string) {
+  const qs = getQuestionsForPerson(person);
+  return qs.map((q) => ({
+    ...q,
+    answer: `(${person}) Ringkasan pemahaman: "${q.text.length > 120 ? q.text.slice(0, 120) + '...' : q.text}". Jawaban (contoh): Saya akan menekankan titik bukti materiil dan kronologi untuk mendukung klaim.`,
+  }));
+}
