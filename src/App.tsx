@@ -456,6 +456,15 @@ export default function App() {
     return deepModeRef.current ? flattenSets(pendalamanSets) : getAllQuestions();
   }, []);
 
+  const startQuizFromIndex = useCallback((index: number) => {
+    const safeIndex = Math.min(Math.max(index, 0), Math.max(shuffledQuestions.length - 1, 0));
+    setCurrentIndex(safeIndex);
+    setPhase('playing');
+    setLastResult(null);
+    setIsAutoPlaying(true);
+    setTimeout(() => speakQuestionRef.current(safeIndex), 200);
+  }, [shuffledQuestions.length]);
+
   const advanceToNext = useCallback(() => {
     const qs = questionsRef.current;
     const next = currentIndexRef.current + 1;
@@ -468,12 +477,12 @@ export default function App() {
       setCurrentIndex(0);
       setSessionCount(c => c + 1);
       toast.success('Sesi selesai! Diacak ulang!');
-      if (autoPlayRef.current) setTimeout(() => speakQuestionRef.current(0), 1500);
+      if (autoPlayRef.current) setTimeout(() => startQuizFromIndex(0), 1200);
       return;
     }
     setCurrentIndex(next);
     if (autoPlayRef.current) setTimeout(() => speakQuestionRef.current(next), 800);
-  }, [getQuestions]);
+  }, [getQuestions, startQuizFromIndex]);
 
   const resetScores = useCallback(() => {
     const init: Record<string, { correct: number; wrong: number }> = {};
@@ -519,8 +528,10 @@ export default function App() {
     setCurrentProlog(null);
     setDuelRound(null);
     resetScores();
+    setIsAutoPlaying(true);
+    setTimeout(() => startQuizFromIndex(0), 250);
     toast.success(newMode ? '🎭 Pengecoh AKTIF!' : '🔀 Normal aktif!');
-  }, [stop, resetScores, getQuestions]);
+  }, [stop, resetScores, getQuestions, startQuizFromIndex]);
 
   const handleToggleDeep = useCallback(() => {
     stop();
@@ -538,8 +549,10 @@ export default function App() {
     setCurrentProlog(null);
     setDuelRound(null);
     resetScores();
+    setIsAutoPlaying(true);
+    setTimeout(() => startQuizFromIndex(0), 250);
     toast.success(newMode ? '📖 Pendalaman AKTIF!' : '📝 Standar aktif!');
-  }, [stop, resetScores]);
+  }, [stop, resetScores, startQuizFromIndex]);
 
   const handleToggleSidangNyata = useCallback(() => {
     stop();
@@ -557,8 +570,10 @@ export default function App() {
     setCurrentProlog(null);
     setDuelRound(null);
     resetScores();
+    setIsAutoPlaying(true);
+    setTimeout(() => startQuizFromIndex(0), 250);
     toast.success(newMode ? '⚖️ Sidang Nyata AKTIF!' : '📝 Standar aktif!');
-  }, [stop, resetScores]);
+  }, [stop, resetScores, startQuizFromIndex]);
 
   const handleToggleKeputusan = useCallback(() => {
     const newMode = !keputusanModeRef.current;
@@ -572,8 +587,10 @@ export default function App() {
     setCurrentProlog(null);
     setDuelRound(null);
     resetScores();
+    setIsAutoPlaying(true);
+    setTimeout(() => startQuizFromIndex(0), 250);
     toast.success(newMode ? '🏛️ Keputusan Sidang AKTIF!' : '📝 Standar aktif!');
-  }, [stop, resetScores]);
+  }, [resetScores, startQuizFromIndex]);
 
   const handleToggleUndian = useCallback(() => {
     stop();
@@ -597,8 +614,10 @@ export default function App() {
     setCurrentIndex(0);
     setDuelRound(null);
     resetScores();
+    setIsAutoPlaying(true);
+    setTimeout(() => startQuizFromIndex(0), 250);
     toast.success(newMode ? '🎲 Undian AKTIF!' : '📝 Standar aktif!');
-  }, [stop, resetScores]);
+  }, [stop, resetScores, startQuizFromIndex]);
 
   const startDuel = useCallback((size: 2 | 3 | 4 | 5 | 6) => {
     stop();
@@ -637,8 +656,10 @@ export default function App() {
     setCurrentIndex(0);
     setCurrentProlog(null);
     setDuelRound(null);
+    setIsAutoPlaying(true);
+    setTimeout(() => startQuizFromIndex(0), 250);
     toast.success(`⚔️ DUEL ${size}: ${picked.join(' vs ')} · Saldo tetap tersimpan · Taruhan Rp${DUEL_BET.toLocaleString('id-ID')}`);
-  }, [stop]);
+  }, [stop, startQuizFromIndex]);
 
   const stopDuel = useCallback(() => {
     stop();
@@ -687,8 +708,10 @@ export default function App() {
     setCurrentIndex(0);
     setCurrentProlog(null);
     setDuelRound(null);
+    setIsAutoPlaying(true);
+    setTimeout(() => startQuizFromIndex(0), 300);
     toast.success('Diacak ulang! Saldo & skor tetap tersimpan.');
-  }, [stop, getQuestions]);
+  }, [stop, getQuestions, startQuizFromIndex]);
 
   const speakQuestionDirect = useCallback((index: number) => {
     const q = questionsRef.current[index];
@@ -790,8 +813,10 @@ export default function App() {
       payOpponents(q.person, opponents);
     }
     const formal = sidangNyataModeRef.current || keputusanModeRef.current || undianModeRef.current;
-    speakFeedback(formal ? `Waktunya habis! Anda tidak layaket! Punya ${q.person}. Benar nomor ${correctAnswer}.` : `Waktunya habis! Kowe kok Washik! Punya ${q.person}. Benar nomor ${correctAnswer}.`, () => setPhase('punishment'));
-  }, [speakFeedback, payOpponents]);
+    speakFeedback(formal ? `Waktunya habis! Anda tidak layak! Punya ${q.person}. Benar nomor ${correctAnswer}.` : `Waktunya habis! Kowe kok Washik! Punya ${q.person}. Benar nomor ${correctAnswer}.`, () => {
+      setTimeout(() => advanceToNext(), 1000);
+    });
+  }, [speakFeedback, payOpponents, advanceToNext]);
 
   const handleReward = useCallback((t: string) => {
     setPhase('rewarding');
@@ -888,7 +913,7 @@ export default function App() {
               Narator Sidang SOKO
             </h1>
             <p className="text-[10px] text-white/60 mt-0.5">
-              {duelMode ? `⚔️ Duel ${duelPlayers.length}: ${duelPlayers.join(', ')}` : undianMode ? '🎲 Undian' : sidangNyataMode ? '⚖️ Sidang Nyata' : keputusanMode ? '🏛️ Keputusan' : deepMode ? '📖 Pendalaman' : '📝 Standar'}
+              {duelMode ? `⚔️ Duel ${duelPlayers.length}: ${duelPlayers.join(', ')}` : undianMode ? '🎲 Undian' : sidangNyataMode ? '⚖️ Sidang Nyata' : keputusanMode ? '🏛️ Keputusan Sidang' : deepMode ? '📖 Pendalaman' : '📝 Standar'}
               {decoyMode ? ' • 🎭 Pengecoh' : ' • 🔀 Acak'}
               {prologMode ? ' • 🎙️ Prolog' : ''}
             </p>
@@ -1068,7 +1093,7 @@ export default function App() {
             <Square className="w-4 h-4" />
           </Button>
           <Button variant="outline" size="sm" onClick={handleNext} disabled={currentIndex >= shuffledQuestions.length - 1} className="bg-black/40 border-white/20 text-white">
-            <SkipBack className="w-4 h-4 text-[#1d0eeb]" />
+            <SkipForward className="w-4 h-4 text-[#1d0eeb]" />
           </Button>
         </div>
       </main>
@@ -1084,4 +1109,4 @@ export default function App() {
       )}
     </div>
   );
-                           }
+}
