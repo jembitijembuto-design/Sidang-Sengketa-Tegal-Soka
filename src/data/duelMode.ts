@@ -34,28 +34,32 @@ const clusters: ClusterDef[] = [
     role: 'duit semilyar',
     questions: {
       Edi: [
-        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menilai iktikad baik pihak yang telah menguasai objek tersebut tanpa menunggu naskah resmi?',
-        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menimbang perlindungan terhadap pihak yang menguasai dengan iktikad baik meski naskah baru muncul belakangan?',
+        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menilai iktikad baik pihak yang telah menguasai objek tersebut tanpa menunggu naskah resmi?[...]
+        ',
+        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menimbang perlindungan terhadap pihak yang menguasai dengan iktikad baik meski naskah baru [...]
       ],
       Ridwan: [
         'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim membebankan pembuktian atas validitas instrumen tersebut kepada pihak yang mengajukannya?',
-        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menilai kekuatan pembuktian instrumen yang lahir belakangan dibanding fakta penguasaan lama?',
+        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menilai kekuatan pembuktian instrumen yang lahir belakangan dibanding fakta penguasaan lama[...]
       ],
       Susanto: [
-        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menilai fakta penguasaan fisik yang telah berlangsung lama sebagai fakta hukum yang mandiri?',
+        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menilai fakta penguasaan fisik yang telah berlangsung lama sebagai fakta hukum yang mandiri[...]
+        ',
         'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menimbang okupasi nyata yang telah lama terjadi di hadapan naskah yang baru terbit?',
       ],
       Suprapti: [
-        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim membedakan cacat formil penerbitan instrumen dengan cacat materiil yang menyentuh substansi kepemilikan?',
-        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menilai apakah keterlambatan penerbitan merupakan cacat formil semata atau cacat yang memengaruhi keabsahan materiil?',
+        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim membedakan cacat formil penerbitan instrumen dengan cacat materiil yang menyentuh substansi[...]
+        ',
+        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menilai apakah keterlambatan penerbitan merupakan cacat formil semata atau cacat yang memen[...]
       ],
       Eka: [
-        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim melindungi pihak ketiga yang telah bertransaksi dengan mengandalkan penguasaan nyata yang terlihat?',
-        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menimbang kepentingan pihak ketiga yang beritikad baik terhadap objek yang sudah lama dikuasai secara terbuka?',
+        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim melindungi pihak ketiga yang telah bertransaksi dengan mengandalkan penguasaan nyata yang t[...]
+        ',
+        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menimbang kepentingan pihak ketiga yang beritikad baik terhadap objek yang sudah lama dikua[...]
       ],
       Jumiati: [
         'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menilai kekuatan sistem pendaftaran tanah negara terhadap naskah yang lahir belakangan?',
-        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menimbang data register negara yang sudah ada dibanding instrumen yang baru muncul di luar sistem pendaftaran?',
+        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menimbang data register negara yang sudah ada dibanding instrumen yang baru muncul di luar [...]
       ],
     },
   },
@@ -129,22 +133,23 @@ const clusters: ClusterDef[] = [
       ],
       Ridwan: [
         'Ketika kedua kubu mengajukan bukti yang saling berlawanan atas objek identik, bagaimana panel hakim menentukan siapa yang memikul beban pembuktian yang lebih berat?',
-        'Ketika kedua kubu mengajukan bukti yang saling berlawanan atas objek identik, bagaimana panel hakim menilai kekuatan relatif alat bukti masing-masing pihak untuk memutus beban pembuktian?',
+        'Ketika kedua kubu mengajukan bukti yang saling berlawanan atas objek identik, bagaimana panel hakim menilai kekuatan relatif alat bukti masing-masing pihak untuk memutus beban pembuktian[...]
       ],
       Susanto: [
         'Ketika kedua kubu mengajukan bukti yang saling berlawanan atas objek identik, bagaimana panel hakim menilai fakta penguasaan fisik sebagai bukti yang paling konkret dan langsung?',
-        'Ketika kedua kubu mengajukan bukti yang saling berlawanan atas objek identik, bagaimana panel hakim menimbang okupasi nyata di lapangan dibanding bukti dokumen yang saling bertentangan?',
+        'Ketika kedua kubu mengajukan bukti yang saling berlawanan atas objek identik, bagaimana panel hakim menimbang okupasi nyata di lapangan dibanding bukti dokumen yang saling bertentangan?'[...]
       ],
       Suprapti: [
         'Ketika kedua kubu mengajukan bukti yang saling berlawanan atas objek identik, bagaimana panel hakim membedakan bukti yang cacat formil dengan bukti yang cacat materiil?',
-        'Ketika kedua kubu mengajukan bukti yang saling berlawanan atas objek identik, bagaimana panel hakim menilai hierarki antara bukti yang hanya cacat formil dan bukti yang menyentuh substansi?',
+        'Ketika kedua kubu mengajukan bukti yang saling berlawanan atas objek identik, bagaimana panel hakim menilai hierarki antara bukti yang hanya cacat formil dan bukti yang menyentuh substan[...]
       ],
       Eka: [
         'Ketika kedua kubu mengajukan bukti yang saling berlawanan atas objek identik, bagaimana panel hakim melindungi kepentingan pihak ketiga yang tidak terlibat dalam sengketa tersebut?',
-        'Ketika kedua kubu mengajukan bukti yang saling berlawanan atas objek identik, bagaimana panel hakim menimbang dampak putusan terhadap pihak ketiga yang telah bertransaksi berdasarkan keadaan yang terlihat?',
+        'Ketika kedua kubu mengajukan bukti yang saling berlawanan atas objek identik, bagaimana panel hakim menimbang dampak putusan terhadap pihak ketiga yang telah bertransaksi berdasarkan kea[...]
       ],
       Jumiati: [
-        'Ketika kedua kubu mengajukan bukti yang saling berlawanan atas objek identik, bagaimana panel hakim menilai data yang tercatat dalam sistem pendaftaran tanah negara sebagai acuan utama?',
+        'Ketika kedua kubu mengajukan bukti yang saling berlawanan atas objek identik, bagaimana panel hakim menilai data yang tercatat dalam sistem pendaftaran tanah negara sebagai acuan utama?'[...]
+        ,
         'Ketika kedua kubu mengajukan bukti yang saling berlawanan atas objek identik, bagaimana panel hakim menimbang kekuatan register negara dibanding bukti di luar sistem pendaftaran?',
       ],
     },
@@ -171,7 +176,7 @@ const clusters: ClusterDef[] = [
       ],
       Eka: [
         'Apabila dalil kepemilikan didasarkan pada perbuatan yang tidak tertulis, dapatkah pihak ketiga yang mengandalkan akibat perbuatan itu dilindungi oleh hukum?',
-        'Apabila dalil kepemilikan didasarkan pada perbuatan yang tidak tertulis, dapatkah kepentingan pihak ketiga yang beritikad baik terhadap akibat perbuatan itu dijaga?',
+        'Apabila dalil kepemilikan didasarkan pada perbuatan yang tidak tertulis, dapatkah kepentingan pihak ketiga beritikad baik terhadap perbuatan itu dijaga?',
       ],
       Jumiati: [
         'Apabila dalil kepemilikan didasarkan pada perbuatan yang tidak tertulis, dapatkah perbuatan itu mengalahkan data yang sudah tercatat dalam sistem pendaftaran tanah negara?',
@@ -231,7 +236,7 @@ const clusters: ClusterDef[] = [
       ],
       Eka: [
         'Bagaimana kedudukan kesaksian masyarakat setempat dalam melindungi pihak ketiga yang mengandalkan peralihan lisan yang sudah dikenal di lingkungan setempat?',
-        'Bagaimana posisi keterangan masyarakat setempat dalam menjaga kepentingan pihak ketiga yang beritikad baik terhadap peralihan lisan di masa lampau?',
+        'Bagaimana posisi keterangan masyarakat setempat dalam menjaga kepentingan pihak ketiga beritikad baik terhadap peralihan lisan di masa lampau?',
       ],
       Jumiati: [
         'Bagaimana kedudukan kesaksian masyarakat setempat dibanding data yang tercatat dalam sistem pendaftaran tanah negara terkait peralihan lisan di masa lampau?',
@@ -438,7 +443,7 @@ const clusters: ClusterDef[] = [
         'Dalam sengketa lahan, apakah fakta okupasi nyata lebih berbobot ketimbang naskah resmi yang tidak disertai penguasaan?',
       ],
       Suprapti: [
-        'Dalam sengketa lahan, apakah keabsahan materiil atas objek sengketa lebih menentukan ketimbang naskah resmi yang mungkin cacat formil?',
+        'Dalam sengketa lahan, apakah keabsahan materiil atas naskah resmi lebih menentukan ketimbang naskah resmi yang mungkin cacat formil?',
         'Dalam sengketa lahan, apakah substansi hak lebih berbobot ketimbang naskah resmi yang hanya memenuhi syarat formil?',
       ],
       Eka: [
@@ -516,27 +521,27 @@ const clusters: ClusterDef[] = [
     role: 'urip kepenak',
     questions: {
       Edi: [
-        'Seberapa jauh kekuatan formal atas naskah resmi dapat menutup celah dalil iktikad baik yang bersandar pada penguasaan nyata bertahun-tahun?',
+        'Seberapa jauh kekuatan formal atas naskah resmi dapat menutup celah dalil iktikad baik pihak penguasa dengan cacat yang hanya bersifat prosedural belaka?',
         'Seberapa jauh daya ikat formal naskah resmi dapat menutup ruang perlindungan bagi pihak yang menguasai dengan iktikad baik lintas dekade?',
       ],
       Ridwan: [
-        'Seberapa jauh kekuatan formal atas naskah resmi dapat menutup celah dalil yang bersandar pada beban dan kekuatan pembuktian penguasaan nyata?',
+        'Seberapa jauh kekuatan formal atas naskah resmi dapat menutup celah yang bersandar pada beban dan kekuatan pembuktian penguasaan nyata?',
         'Seberapa jauh daya ikat formal naskah resmi dapat menggeser beban pembuktian dari pihak yang menguasai nyata bertahun-tahun?',
       ],
       Susanto: [
-        'Seberapa jauh kekuatan formal atas naskah resmi dapat menutup celah dalil yang bersandar pada fakta penguasaan nyata bertahun-tahun?',
+        'Seberapa jauh kekuatan formal atas naskah resmi dapat menutup celah yang bersandar pada fakta penguasaan nyata bertahun-tahun?',
         'Seberapa jauh daya ikat formal naskah resmi dapat meniadakan nilai hukum okupasi fisik yang telah berlangsung lama?',
       ],
       Suprapti: [
-        'Seberapa jauh kekuatan formal atas naskah resmi dapat menutup celah dalil yang membedakan cacat formil dengan cacat materiil?',
+        'Seberapa jauh kekuatan formal atas naskah resmi dapat menutup celah yang membedakan cacat formil dengan cacat materiil?',
         'Seberapa jauh daya ikat formal naskah resmi dapat mengabaikan pembedaan antara cacat formil dan substansi hak yang sudah terbentuk?',
       ],
       Eka: [
-        'Seberapa jauh kekuatan formal atas naskah resmi dapat menutup celah dalil perlindungan pihak ketiga yang mengandalkan penguasaan nyata?',
+        'Seberapa jauh kekuatan formal atas naskah resmi dapat menutup celah perlindungan pihak ketiga yang mengandalkan penguasaan nyata?',
         'Seberapa jauh daya ikat formal naskah resmi dapat mengesampingkan kepentingan pihak ketiga beritikad baik atas keadaan yang terlihat?',
       ],
       Jumiati: [
-        'Seberapa jauh kekuatan formal atas naskah resmi dapat menutup celah dalil yang bersandar pada data sistem pendaftaran tanah negara?',
+        'Seberapa jauh kekuatan formal atas naskah resmi dapat menutup celah yang bersandar pada data sistem pendaftaran tanah negara?',
         'Seberapa jauh daya ikat formal naskah resmi dapat mengalahkan kekuatan register negara yang mencatat keadaan berbeda?',
       ],
     },
@@ -563,7 +568,7 @@ const clusters: ClusterDef[] = [
       ],
       Eka: [
         'Bagaimana panel hakim menilai klaim pihak yang baru muncul belakangan dengan membawa naskah, terhadap perlindungan pihak ketiga yang terlibat?',
-        'Bagaimana panel hakim menimbang tuntutan pihak yang baru membawa naskah agar tidak merugikan pihak ketiga beritikad baik?',
+        'Bagaimana panel hakim menimbang tuntutan pihak yang baru membawa naskah agar tidak merugikan pihak ketiga beritikad baik yang muncul di tenggang waktu itu?',
       ],
       Jumiati: [
         'Bagaimana panel hakim menilai klaim pihak yang baru muncul belakangan dengan membawa naskah, dalam kerangka sistem pendaftaran tanah negara?',
@@ -596,7 +601,7 @@ const clusters: ClusterDef[] = [
         'Apakah terbitnya naskah kemudian mampu mengalahkan kepentingan pihak ketiga beritikad baik atas keadaan yang sudah lama terbuka?',
       ],
       Jumiati: [
-        'Apakah kehadiran naskah yang terbit kemudian mampu menggeser data yang sudah tercatat dalam sistem pendaftaran tanah negara?',
+        'Apakah kehadiran naskah yang terbit kemudian mampu menggeser data yang tercatat dalam sistem pendaftaran tanah negara?',
         'Apakah terbitnya naskah kemudian mampu mengalahkan kekuatan register negara yang telah merekam kedudukan sebelumnya?',
       ],
     },
@@ -703,11 +708,11 @@ const clusters: ClusterDef[] = [
       ],
       Ridwan: [
         'Pihak mana yang seharusnya memikul beban pembuktian apabila satu kubu menguasai naskah resmi dan kubu lain mengandalkan dalil lisan semata?',
-        'Pihak mana yang seharusnya menanggung beban pembuktian apabila satu kubu menguasai naskah resmi dan kubu lain mengandalkan penguasaan tanpa naskah?',
+        'Pihak mana yang seharusnya menanggung kewajiban membuktikan apabila satu kubu menguasai naskah resmi dan kubu lain mengandalkan penguasaan tanpa naskah?',
       ],
       Susanto: [
         'Pihak mana yang seharusnya memikul beban untuk menyangkal fakta penguasaan nyata apabila satu kubu menguasai naskah resmi dan kubu lain mengandalkan okupasi?',
-        'Pihak mana yang seharusnya menanggung kewajiban membantah okupasi fisik apabila satu kubu menguasai naskah dan kubu lain mengandalkan penguasaan nyata?',
+        'Pihak mana yang seharusnya menanggung kewajiban membantah okupasi fisik apabila satu kubu menguasai naskah dan kubu lain mengandalkan penguasaan?',
       ],
       Suprapti: [
         'Pihak mana yang seharusnya memikul beban untuk membuktikan cacat materiil apabila satu kubu menguasai naskah resmi dan kubu lain mengandalkan penguasaan lama?',
@@ -718,8 +723,9 @@ const clusters: ClusterDef[] = [
         'Pihak mana yang seharusnya menanggung kewajiban menjaga pihak ketiga beritikad baik dalam sengketa antara pemegang naskah dan penguasa nyata?',
       ],
       Jumiati: [
-        'Pihak mana yang seharusnya memikul beban untuk membuktikan ketidaksesuaian dengan sistem pendaftaran tanah negara apabila satu kubu menguasai naskah dan kubu lain mengandalkan penguasaan?',
-        'Pihak mana yang seharusnya menanggung kewajiban membuktikan data register negara apabila satu kubu menguasai naskah di luar sistem dan kubu lain mengandalkan penguasaan?',
+        'Pihak mana yang seharusnya memikul beban untuk membuktikan ketidaksesuaian dengan sistem pendaftaran tanah negara apabila satu kubu menguasai naskah dan kubu lain mengandalkan penguasaan[...]
+        ',
+        'Pihak mana yang seharusnya menanggung kewajiban membuktikan data register negara apabila satu kubu menguasai naskah resmi dan kubu lain mengandalkan penguasaan?',
       ],
     },
   },
@@ -771,11 +777,11 @@ const clusters: ClusterDef[] = [
       ],
       Suprapti: [
         'Apakah kontribusi yang dilakukan keluarga penguasa lahan selama puluhan tahun menutup cacat formil ketiadaan naskah resmi?',
-        'Apakah sumbangsih yang dilakukan keluarga penguasa lahan selama puluhan tahun menunjukkan substansi hak meski ada cacat formil?',
+        'Apakah sumbangsih yang dilakukan keluarga penguasa lahan selama puluhan tahun menunjukkan substansi hak meski ada cacat formil naskah?',
       ],
       Eka: [
         'Apakah kontribusi yang dilakukan keluarga penguasa lahan selama puluhan tahun melindungi pihak ketiga yang mengandalkan keadaan tersebut?',
-        'Apakah sumbangsih yang dilakukan keluarga penguasa lahan selama puluhan tahun menjadi dasar perlindungan bagi pihak ketiga beritikad baik?',
+        'Apakah sumbangsih yang dilakukan keluarga penguasa lahan selama puluhan tahun menjadi dasar perlindungan bagi pihak ketiga yang beritikad baik?',
       ],
       Jumiati: [
         'Apakah kontribusi yang dilakukan keluarga penguasa lahan selama puluhan tahun menguatkan kedudukan di luar data sistem pendaftaran tanah negara?',
@@ -801,7 +807,7 @@ const clusters: ClusterDef[] = [
       ],
       Suprapti: [
         'Bagaimana panel hakim seharusnya menyikapi kontradiksi antara dalil penggugat yang tidak disertai bukti fisik dan penguasaan tergugat dari sudut cacat formil versus materiil?',
-        'Bagaimana panel hakim seharusnya menanggapi pertentangan tersebut dengan membedakan cacat formil dalil dan substansi penguasaan?',
+        'Bagaimana panel hakim seharusnya menanggapi pertentangan tersebut dengan membedakan cacat materiil dalil dan substansi penguasaan?',
       ],
       Eka: [
         'Bagaimana panel hakim seharusnya menyikapi kontradiksi antara dalil penggugat yang tidak disertai bukti fisik dan penguasaan tergugat dengan mempertimbangkan pihak ketiga?',
@@ -831,7 +837,7 @@ const clusters: ClusterDef[] = [
       ],
       Suprapti: [
         'Apakah keberlanjutan lintas generasi atas lahan dapat menutup cacat formil ketiadaan naskah resmi?',
-        'Apakah kesinambungan lintas generasi atas lahan dapat menunjukkan substansi hak meski ada cacat formil?',
+        'Apakah kesinambungan lintas generasi atas lahan dapat menunjukkan substansi hak meski ada cacat formil naskah?',
       ],
       Eka: [
         'Apakah keberlanjutan lintas generasi atas lahan dapat menguatkan perlindungan pihak ketiga meski naskah resmi belum lengkap?',
@@ -869,7 +875,7 @@ const clusters: ClusterDef[] = [
       ],
       Jumiati: [
         'Bagaimana panel hakim menilai keterlambatan pihak yang baru mengajukan gugatan dalam kerangka sistem pendaftaran tanah negara setelah puluhan tahun?',
-        'Bagaimana panel hakim menimbang kelambanan penggugat dibanding data yang sudah atau belum tercatat dalam register negara selama tenggang itu?',
+        'Bagaimana panel hakim menimbang keterlambatan penggugat dibanding data yang sudah atau belum tercatat dalam register negara selama tenggang itu?',
       ],
     },
   },
@@ -939,7 +945,9 @@ function generateDuelSets(): PersonSet[] {
   const personQs: Record<string, [Question[], Question[]]> = {};
   for (const p of PERSONS) personQs[p] = [[], []];
 
-  for (const c of clusters) {
+  // --- iterate clusters in REVERSE so questions from the last clusters become first ---
+  for (let i = clusters.length - 1; i >= 0; i--) {
+    const c = clusters[i];
     for (const person of PERSONS) {
       const [t0, t1] = c.questions[person];
       personQs[person][0].push({ id: c.id, role: c.role, text: t0 });
@@ -965,6 +973,23 @@ export function getClusterQuestions(
   for (const person of PERSONS) {
     if (persons && !persons.includes(person)) continue;
     const [t0, t1] = c.questions[person];
+    out.push({ id: c.id, role: c.role, text: t0, person, setIndex: 0 });
+    out.push({ id: c.id, role: c.role, text: t1, person, setIndex: 1 });
+  }
+  return out;
+}
+
+/**
+ * Mengambil seluruh pertanyaan milik satu peserta (semua cluster).
+ * Urutan pertanyaan mengikuti urutan cluster yang dibalik (cluster terakhir → cluster pertama),
+ * sehingga pertanyaan akhir di bank menjadi pertanyaan awal di hasil ini — tanpa mengubah teks pertanyaan.
+ */
+export function getQuestionsForPerson(person: string): (Question & { person: string; setIndex: number })[] {
+  if (!PERSONS.includes(person as Person)) return [];
+  const out: (Question & { person: string; setIndex: number })[] = [];
+  for (let i = clusters.length - 1; i >= 0; i--) {
+    const c = clusters[i];
+    const [t0, t1] = c.questions[person as Person];
     out.push({ id: c.id, role: c.role, text: t0, person, setIndex: 0 });
     out.push({ id: c.id, role: c.role, text: t1, person, setIndex: 1 });
   }
