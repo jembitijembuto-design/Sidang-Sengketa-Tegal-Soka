@@ -4,6 +4,7 @@ import { pendalamanSets } from '@/data/pendalaman';
 import { allPersonSets as sidangNyataSets } from '@/data/sidangNyata';
 import { duelSets } from '@/data/duelMode';
 import { keputusanSidangSets } from '@/data/keputusanSidang';
+import PersonTester from '@/components/PersonTester';
 import SidangNyataPunishment from '@/components/SidangNyataPunishment';
 import { useSpeech } from '@/hooks/useSpeech';
 import QuestionCard from '@/components/QuestionCard';
@@ -180,7 +181,6 @@ type Phase = 'idle' | 'prolog' | 'playing' | 'waitAnswer' | 'feedback' | 'reward
 
 const ALL_PERSONS = ['Edi', 'Ridwan', 'Susanto', 'Suprapti', 'Eka', 'Jumiati'];
 
-// ===== MEDIA LOCALES (FULL OFFLINE) =====
 const APPLAUSE_URLS = ['/audio/applause1.mp3', '/audio/applause2.mp3', '/audio/applause3.mp3'];
 const OCEAN_AUDIO_URL = '/audio/ocean.mp3';
 const OCEAN_VIDEO_URL = '/media/ocean.mp4';
@@ -188,7 +188,6 @@ const JOGET_VIDEO_URL = '/media/joget.mp4';
 const DUEL_BET = 100_000;
 const DUEL_START_SALDO = 500_000;
 
-// ========== LOCAL STORAGE HELPERS ==========
 const STORAGE_KEY_SALDO = 'nationalist_duel_saldo';
 const STORAGE_KEY_SCORES = 'nationalist_scores';
 
@@ -234,7 +233,6 @@ function createInitialScores(): Record<string, { correct: number; wrong: number 
 }
 
 export default function App() {
-  // ===== AUTH GATE — selalu minta kode akses =====
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const [decoyMode, setDecoyMode] = useState(false);
@@ -258,11 +256,9 @@ export default function App() {
     targetPerson: string;
   } | null>(null);
 
-  // ===== SALDO PERSISTEN =====
   const [duelSaldo, setDuelSaldo] = useState<Record<string, number>>(() => loadSaldo());
   const duelSaldoRef = useRef(duelSaldo);
 
-  // ===== SCORES PERSISTEN =====
   const [scores, setScores] = useState<Record<string, { correct: number; wrong: number }>>(createInitialScores);
   const scoresRef = useRef(scores);
 
@@ -296,36 +292,25 @@ export default function App() {
   const applauseRef = useRef<HTMLAudioElement | null>(null);
   const applauseUnlockedRef = useRef(false);
 
-  // Sync refs
   useEffect(() => { duelSaldoRef.current = duelSaldo; }, [duelSaldo]);
   useEffect(() => { scoresRef.current = scores; }, [scores]);
-
-  // ===== SAVE KE LOCALSTORAGE =====
   useEffect(() => { saveSaldo(duelSaldo); }, [duelSaldo]);
   useEffect(() => { saveScores(scores); }, [scores]);
 
-  // ===== NARATOR OTOMATIS — UPDATE SKOR SEPULUH MENIT =====
   useEffect(() => {
     const TEN_MINUTES = 10 * 60 * 1000;
-
     const announceStandings = () => {
       const currentScores = scoresRef.current;
       const currentSaldo = duelSaldoRef.current;
-
       const parts: string[] = ['Update skor sepuluh menit sekali.'];
-
       ALL_PERSONS.forEach(person => {
         const s = currentScores[person] ?? { correct: 0, wrong: 0 };
         const saldo = currentSaldo[person] ?? 0;
-        parts.push(
-          `${person}: benar ${s.correct}, salah ${s.wrong}, saldo ${saldo.toLocaleString('id-ID')} rupiah.`
-        );
+        parts.push(`${person}: benar ${s.correct}, salah ${s.wrong}, saldo ${saldo.toLocaleString('id-ID')} rupiah.`);
       });
-
       const text = parts.join(' ');
       speak(text);
     };
-
     const intervalId = setInterval(announceStandings, TEN_MINUTES);
     return () => clearInterval(intervalId);
   }, [speak]);
@@ -490,14 +475,12 @@ export default function App() {
     if (autoPlayRef.current) setTimeout(() => speakQuestionRef.current(next), 800);
   }, [getQuestions]);
 
-  // resetScores hanya mengosongkan skor, TIDAK menyentuh saldo
   const resetScores = useCallback(() => {
     const init: Record<string, { correct: number; wrong: number }> = {};
     ALL_PERSONS.forEach(p => {
       init[p] = { correct: 0, wrong: 0 };
     });
     setScores(init);
-    // saldo TIDAK di-reset
   }, []);
 
   const clearOtherModes = () => {
@@ -513,7 +496,6 @@ export default function App() {
     duelModeRef.current = false;
     setDuelPlayers([]);
     duelPlayersRef.current = [];
-    // SALDO TIDAK DIHAPUS
   };
 
   const handleToggleProlog = useCallback(() => {
@@ -613,7 +595,6 @@ export default function App() {
     setShuffledQuestions(shuffleVariedPattern(qs));
     setSessionCount(c => c + 1);
     setCurrentIndex(0);
-    setBootstrap(null);
     setDuelRound(null);
     resetScores();
     toast.success(newMode ? '🎲 Undian AKTIF!' : '📝 Standar aktif!');
@@ -735,10 +716,7 @@ export default function App() {
         if (candidate) decoys.push(candidate);
       }
       const roundQs = [q, ...decoys].sort(() => Math.random() - 0.5);
-      setDuelRound({
-        questions: roundQs,
-        targetPerson: q.person
-      });
+      setDuelRound({ questions: roundQs, targetPerson: q.person });
       const parts = [`Duel ${players.length} peserta! Yang ikut: ${players.join(', ')}. Dengarkan baik-baik!`];
       for (let i = 0; i < roundQs.length; i++) {
         parts.push(`Pertanyaan ${labels[i]}. Dari ${roundQs[i].role}. ${roundQs[i].text}`);
@@ -888,13 +866,13 @@ export default function App() {
   const formalMode = sidangNyataMode || keputusanMode || undianMode;
 
   if (!isAuthenticated) {
-  return <LoginGate onSuccess={() => setIsAuthenticated(true)} />;
-}
+    return <LoginGate onSuccess={() => setIsAuthenticated(true)} />;
+  }
 
   return (
     <div className="min-h-screen relative overflow-hidden">
       <div className="fixed inset-0 z-0 overflow-hidden">
-        <video ref={videoRef} autoPlay loop muted playsInline preload="auto" className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto -translate-x-1/2 -translate-y-1/2 object-cover">
+        <video ref={videoRef} autoPlay loop muted playsInline preload="auto" className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto -translate-x-1/2 -translate-y-1/2 object-cover" >
           <source src={OCEAN_VIDEO_URL} type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/40" />
@@ -910,7 +888,7 @@ export default function App() {
               Narator Sidang SOKO
             </h1>
             <p className="text-[10px] text-white/60 mt-0.5">
-              {duelMode ? `⚔️ Duel ${duelPlayers.length}: ${duelPlayers.join(', ')}` : undianMode ? '🎲 Undian' : sidangNyataMode ? '⚖️ Sidang Nyata' : keputusanMode ? '🏛️ Keputusan' : deepMode ? '📖 Pendalaman' : '📋 Standar Standar'}
+              {duelMode ? `⚔️ Duel ${duelPlayers.length}: ${duelPlayers.join(', ')}` : undianMode ? '🎲 Undian' : sidangNyataMode ? '⚖️ Sidang Nyata' : keputusanMode ? '🏛️ Keputusan' : deepMode ? '📖 Pendalaman' : '📝 Standar'}
               {decoyMode ? ' • 🎭 Pengecoh' : ' • 🔀 Acak'}
               {prologMode ? ' • 🎙️ Prolog' : ''}
             </p>
@@ -940,7 +918,7 @@ export default function App() {
             </button>
 
             {([2, 3, 4, 5, 6] as const).map(n => (
-              <button key={n} onClick={() => startDuel(n)} className={`glow-btn ${duelMode && duelPlayers.length === n ? 'glow-btn--active glow-btn--amber' : 'glow-btn--amber'}`} title={`Duel ${n} peserta`}>
+              <button key={n} onClick={() => startDuel(n)} className={`glow-btn ${duelMode && duelPlayers.length === n ? 'glow-btn--active glow-btn--amber' : 'glow-btn--amber'}`} title={`Duel ${n}`}>
                 <Swords className="w-3 h-3 text-[#f5a30c]" />
                 <span className="text-[10px] ml-0.5 text-amber-200">{n}</span>
               </button>
@@ -965,6 +943,10 @@ export default function App() {
       </div>
 
       <main className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 py-20">
+        <div className="mb-4">
+          <PersonTester />
+        </div>
+
         {Object.keys(duelSaldo).length > 0 && (
           <div className="mb-3 flex flex-wrap gap-2 justify-center max-w-lg">
             {ALL_PERSONS.filter(p => duelSaldo[p] !== undefined).map(p => (
@@ -1038,7 +1020,7 @@ export default function App() {
               ?
             </p>
             {duelRound.questions.map((dq, i) => (
-              <button key={i} onClick={() => handleDuelIdentify(i)} className='w-full p-4 rounded-xl bg-black/50 border border-white/20 text-white text-left hover:border-amber-400/50 transition-all px-[5px] py-[5px] text-xs'>
+              <button key={i} onClick={() => handleDuelIdentify(i)} className='w-full p-4 rounded-xl bg-black/50 border border-white/20 text-white text-left hover:border-amber-400/50 transition-all duration-200'>
                 <span className="font-bold text-amber-400">Pertanyaan {String.fromCharCode(65 + i)}</span>
                 <p className="mt-2 text-sm text-white/90">{dq.text}</p>
               </button>
