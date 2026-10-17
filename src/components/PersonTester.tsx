@@ -1,121 +1,141 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { getQuestionsForPerson } from '@/lib/debate';
 
 const ALL_PERSONS = ['Edi', 'Ridwan', 'Susanto', 'Suprapti', 'Eka', 'Jumiati'];
 
 export default function PersonTester() {
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selectedPerson, setSelectedPerson] = useState<string | null>(null);
   const [questions, setQuestions] = useState<any[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [showResult, setShowResult] = useState(false);
+  const [correctCount, setCorrectCount] = useState(0);
+  const [wrongCount, setWrongCount] = useState(0);
 
-  // Autoplay / TTS
-  const playingRef = useRef(false);
-  const currentReadIndexRef = useRef<number>(0);
+  const currentQuestion = questions[currentIndex] ?? null;
 
-  const show = (p: string) => {
-    setSelected(p);
-    try {
-      setQuestions(getQuestionsForPerson(p));
-    } catch {
-      setQuestions([]);
-    }
+  const choosePerson = (person: string) => {
+    setSelectedPerson(person);
+    setCurrentIndex(0);
+    setSelectedAnswer(null);
+    setShowResult(false);
+    setCorrectCount(0);
+    setWrongCount(0);
+    setQuestions(getQuestionsForPerson(person));
   };
 
-  const readText = (text: string) => {
+  const speakQuestion = (text: string) => {
     try {
       if (!('speechSynthesis' in window)) return;
+      const utterance = new SpeechSynthesisUtterance(text);
       window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
-      // optional: set voice/lang here
-      window.speechSynthesis.speak(u);
-    } catch { /* ignore */ }
-  };
-
-  const copyText = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      // simple feedback
-      // toast? but keep dependency-free here
-      // eslint-disable-next-line no-alert
-      alert('Teks disalin ke clipboard');
+      window.speechSynthesis.speak(utterance);
     } catch {
-      // ignore
+      // ignore TTS errors silently
     }
   };
 
-  const stopPlaying = () => {
-    playingRef.current = false;
-    currentReadIndexRef.current = 0;
-    try { window.speechSynthesis.cancel(); } catch { /* ignore */ }
+  const checkAnswer = () => {
+    if (!currentQuestion || selectedAnswer === null) return;
+
+    const correct = (currentQuestion.setIndex ?? 0) + 1;
+    const isCorrect = selectedAnswer === correct;
+
+    setShowResult(true);
+    if (isCorrect) {
+      setCorrectCount((v) => v + 1);
+    } else {
+      setWrongCount((v) => v + 1);
+    }
   };
 
-  const playAll = (startIndex = 0) => {
-    if (!questions || questions.length === 0) return;
-    if (!('speechSynthesis' in window)) return;
-    playingRef.current = true;
-    currentReadIndexRef.current = startIndex;
-
-    const speakIndex = (i: number) => {
-      if (!playingRef.current) return;
-      if (i >= questions.length) {
-        stopPlaying();
-        return;
-      }
-      const q = questions[i];
-      window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(`${q.role}. ${q.text}`);
-      u.onend = () => {
-        currentReadIndexRef.current = i + 1;
-        // small delay between items
-        setTimeout(() => speakIndex(i + 1), 400);
-      };
-      window.speechSynthesis.speak(u);
-    };
-
-    speakIndex(startIndex);
+  const nextQuestion = () => {
+    setSelectedAnswer(null);
+    setShowResult(false);
+    setCurrentIndex((idx) => {
+      const next = idx + 1;
+      return next < questions.length ? next : idx;
+    });
   };
+
+  const previousQuestion = () => {
+    setSelectedAnswer(null);
+    setShowResult(false);
+    setCurrentIndex((idx) => (idx > 0 ? idx - 1 : 0));
+  };
+
+  const isFinished = currentIndex >= questions.length;
 
   return (
-    <div className="person-tester text-sm">
-      <div className="flex gap-2 items-center">
-        {ALL_PERSONS.map(p => (
-          <Button key={p} size="sm" onClick={() => show(p)} className="px-2">
-            {p}
+    <div className="p-4 text-sm">
+      <div className="flex flex-wrap gap-2">
+        {ALL_PERSONS.map((person) => (
+          <Button key={person} size="sm" onClick={() => choosePerson(person)}>
+            {person}
           </Button>
         ))}
       </div>
 
-      {selected && (
-        <div className="mt-2 p-3 bg-black/50 rounded-lg max-h-72 overflow-auto border border-white/10">
-          <div className="flex items-center justify-between mb-2">
-            <strong className="text-white">Pertanyaan: {selected}</strong>
-            <div className="flex items-center gap-2">
-              <Button size="sm" onClick={() => playAll(0)} className="px-2">Mulai Tes</Button>
-              <Button size="sm" variant="outline" onClick={() => stopPlaying()}>Stop</Button>
-              <Button size="sm" variant="ghost" onClick={() => setSelected(null)}>Tutup</Button>
+      {selectedPerson && (
+        <div className="mt-4 rounded-xl border border-white/10 bg-black/40 p-4">
+          <div className="mb-3 flex items-center justify-between gap-2">
+            <h3 className="font-bold text-white">Peserta: {selectedPerson}</h3>
+            <div className="text-xs text-white/70">
+              Skor: {correctCount} benar / {wrongCount} salah
             </div>
           </div>
 
-          {questions.length === 0 ? (
-            <p className="text-white/60">Tidak ada pertanyaan.</p>
-          ) : (
-            <ol className="space-y-2">
-              {questions.map((q: any, idx: number) => (
-                <li key={`${q.person}-${q.globalIndex}`} className="text-white bg-black/30 p-2 rounded-md flex flex-col gap-2">
-                  <div className="flex items-start justify-between gap-2">
-                    <div>
-                      <div className="font-semibold text-amber-200">{q.role} · Set {q.setIndex + 1}</div>
-                      <div className="text-sm mt-1">{q.text}</div>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <Button size="xs" onClick={() => readText(q.text)}>Baca</Button>
-                      <Button size="xs" variant="outline" onClick={() => copyText(q.text)}>Salin</Button>
-                      <Button size="xs" variant="ghost" onClick={() => playAll(idx)}>Mulai dari sini</Button>
-                    </div>
-                  </div>
-                </li>
-              ))}
-            </ol>
+          {questions.length > 0 && currentQuestion && !isFinished && (
+            <div className="space-y-3">
+              <div className="rounded-lg bg-white/5 p-3">
+                <div className="text-xs text-amber-300">Pertanyaan {currentIndex + 1} / {questions.length}</div>
+                <div className="mt-2 text-white">{currentQuestion.text}</div>
+              </div>
+
+              <div className="flex gap-2">
+                <Button size="sm" variant="outline" onClick={() => speakQuestion(currentQuestion.text)}>
+                  Baca
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => setSelectedAnswer(1)}>
+                  Jawaban 1
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => setSelectedAnswer(2)}>
+                  Jawaban 2
+                </Button>
+              </div>
+
+              <div className="mt-2 text-xs text-white/70">
+                Pilihan saat ini: {selectedAnswer === null ? 'Belum dipilih' : `Jawaban ${selectedAnswer}`}
+              </div>
+
+              {showResult && (
+                <div className={`rounded-md p-2 text-sm font-semibold ${
+                  selectedAnswer === (currentQuestion.setIndex ?? 0) + 1 ? 'bg-green-500/20 text-green-300' : 'bg-red-500/20 text-red-300'
+                }`}>
+                  {selectedAnswer === (currentQuestion.setIndex ?? 0) + 1 ? 'Benar' : 'Salah'}
+                  {' — Jawaban benar: ' + ((currentQuestion.setIndex ?? 0) + 1)}
+                </div>
+              )}
+
+              <div className="flex gap-2">
+                <Button size="sm" onClick={checkAnswer}>Cek Jawaban</Button>
+                <Button size="sm" variant="ghost" onClick={previousQuestion} disabled={currentIndex === 0}>
+                  Sebelumnya
+                </Button>
+                <Button size="sm" variant="ghost" onClick={nextQuestion} disabled={currentIndex >= questions.length - 1}>
+                  Selanjutnya
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {questions.length === 0 && (
+            <div className="text-white/60">Tidak ada pertanyaan untuk peserta ini.</div>
+          )}
+
+          {!isFinished && questions.length > 0 && currentIndex >= questions.length && (
+            <div className="text-white/70">Semua pertanyaan selesai.</div>
           )}
         </div>
       )}
