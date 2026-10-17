@@ -34,32 +34,28 @@ const clusters: ClusterDef[] = [
     role: 'duit semilyar',
     questions: {
       Edi: [
-        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menilai iktikad baik pihak yang telah menguasai objek tersebut tanpa menunggu naskah resmi?[...]
-        ',
-        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menimbang perlindungan terhadap pihak yang menguasai dengan iktikad baik meski naskah baru [...]
+        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menilai iktikad baik pihak yang telah menguasai objek tersebut tanpa menunggu naskah resmi?[...]',
+        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menimbang perlindungan terhadap pihak yang menguasai dengan iktikad baik meski naskah baru [...]',
       ],
       Ridwan: [
         'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim membebankan pembuktian atas validitas instrumen tersebut kepada pihak yang mengajukannya?',
-        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menilai kekuatan pembuktian instrumen yang lahir belakangan dibanding fakta penguasaan lama[...]
+        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menilai kekuatan pembuktian instrumen yang lahir belakangan dibanding fakta penguasaan lama[...]',
       ],
       Susanto: [
-        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menilai fakta penguasaan fisik yang telah berlangsung lama sebagai fakta hukum yang mandiri[...]
-        ',
+        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menilai fakta penguasaan fisik yang telah berlangsung lama sebagai fakta hukum yang mandiri[...]',
         'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menimbang okupasi nyata yang telah lama terjadi di hadapan naskah yang baru terbit?',
       ],
       Suprapti: [
-        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim membedakan cacat formil penerbitan instrumen dengan cacat materiil yang menyentuh substansi[...]
-        ',
-        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menilai apakah keterlambatan penerbitan merupakan cacat formil semata atau cacat yang memen[...]
+        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim membedakan cacat formil penerbitan instrumen dengan cacat materiil yang menyentuh substansi[...]',
+        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menilai apakah keterlambatan penerbitan merupakan cacat formil semata atau cacat yang memen[...]',
       ],
       Eka: [
-        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim melindungi pihak ketiga yang telah bertransaksi dengan mengandalkan penguasaan nyata yang t[...]
-        ',
-        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menimbang kepentingan pihak ketiga yang beritikad baik terhadap objek yang sudah lama dikua[...]
+        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim melindungi pihak ketiga yang telah bertransaksi dengan mengandalkan penguasaan nyata yang t[...]',
+        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menimbang kepentingan pihak ketiga yang beritikad baik terhadap objek yang sudah lama dikua[...]',
       ],
       Jumiati: [
         'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menilai kekuatan sistem pendaftaran tanah negara terhadap naskah yang lahir belakangan?',
-        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menimbang data register negara yang sudah ada dibanding instrumen yang baru muncul di luar [...]
+        'Apabila instrumen tertulis terbit jauh setelah objek dikuasai pihak lain, bagaimana panel hakim menimbang data register negara yang sudah ada dibanding instrumen yang baru muncul di luar [...]',
       ],
     },
   },
@@ -133,23 +129,22 @@ const clusters: ClusterDef[] = [
       ],
       Ridwan: [
         'Ketika kedua kubu mengajukan bukti yang saling berlawanan atas objek identik, bagaimana panel hakim menentukan siapa yang memikul beban pembuktian yang lebih berat?',
-        'Ketika kedua kubu mengajukan bukti yang saling berlawanan atas objek identik, bagaimana panel hakim menilai kekuatan relatif alat bukti masing-masing pihak untuk memutus beban pembuktian[...]
+        'Ketika kedua kubu mengajukan bukti yang saling berlawanan atas objek identik, bagaimana panel hakim menilai kekuatan relatif alat bukti masing-masing pihak untuk memutus beban pembuktian[...]',
       ],
       Susanto: [
         'Ketika kedua kubu mengajukan bukti yang saling berlawanan atas objek identik, bagaimana panel hakim menilai fakta penguasaan fisik sebagai bukti yang paling konkret dan langsung?',
-        'Ketika kedua kubu mengajukan bukti yang saling berlawanan atas objek identik, bagaimana panel hakim menimbang okupasi nyata di lapangan dibanding bukti dokumen yang saling bertentangan?'[...]
+        'Ketika kedua kubu mengajukan bukti yang saling berlawanan atas objek identik, bagaimana panel hakim menimbang okupasi nyata di lapangan dibanding bukti dokumen yang saling bertentangan?[...]',
       ],
       Suprapti: [
         'Ketika kedua kubu mengajukan bukti yang saling berlawanan atas objek identik, bagaimana panel hakim membedakan bukti yang cacat formil dengan bukti yang cacat materiil?',
-        'Ketika kedua kubu mengajukan bukti yang saling berlawanan atas objek identik, bagaimana panel hakim menilai hierarki antara bukti yang hanya cacat formil dan bukti yang menyentuh substan[...]
+        'Ketika kedua kubu mengajukan bukti yang saling berlawanan atas objek identik, bagaimana panel hakim menilai hierarki antara bukti yang hanya cacat formil dan bukti yang menyentuh substan[...]',
       ],
       Eka: [
         'Ketika kedua kubu mengajukan bukti yang saling berlawanan atas objek identik, bagaimana panel hakim melindungi kepentingan pihak ketiga yang tidak terlibat dalam sengketa tersebut?',
-        'Ketika kedua kubu mengajukan bukti yang saling berlawanan atas objek identik, bagaimana panel hakim menimbang dampak putusan terhadap pihak ketiga yang telah bertransaksi berdasarkan kea[...]
+        'Ketika kedua kubu mengajukan bukti yang saling berlawanan atas objek identik, bagaimana panel hakim menimbang dampak putusan terhadap pihak ketiga yang telah bertransaksi berdasarkan kea[...]',
       ],
       Jumiati: [
-        'Ketika kedua kubu mengajukan bukti yang saling berlawanan atas objek identik, bagaimana panel hakim menilai data yang tercatat dalam sistem pendaftaran tanah negara sebagai acuan utama?'[...]
-        ,
+        'Ketika kedua kubu mengajukan bukti yang saling berlawanan atas objek identik, bagaimana panel hakim menilai data yang tercatat dalam sistem pendaftaran tanah negara sebagai acuan utama?[...]',
         'Ketika kedua kubu mengajukan bukti yang saling berlawanan atas objek identik, bagaimana panel hakim menimbang kekuatan register negara dibanding bukti di luar sistem pendaftaran?',
       ],
     },
@@ -723,8 +718,7 @@ const clusters: ClusterDef[] = [
         'Pihak mana yang seharusnya menanggung kewajiban menjaga pihak ketiga beritikad baik dalam sengketa antara pemegang naskah dan penguasa nyata?',
       ],
       Jumiati: [
-        'Pihak mana yang seharusnya memikul beban untuk membuktikan ketidaksesuaian dengan sistem pendaftaran tanah negara apabila satu kubu menguasai naskah dan kubu lain mengandalkan penguasaan[...]
-        ',
+        'Pihak mana yang seharusnya memikul beban untuk membuktikan ketidaksesuaian dengan sistem pendaftaran tanah negara apabila satu kubu menguasai naskah dan kubu lain mengandalkan penguasaan[...]',
         'Pihak mana yang seharusnya menanggung kewajiban membuktikan data register negara apabila satu kubu menguasai naskah resmi dan kubu lain mengandalkan penguasaan?',
       ],
     },
