@@ -10,7 +10,7 @@ export interface FlatQuestion {
   answer?: string;
 }
 
-// Tambahkan logika untuk meratakan data dari source lain jika ingin dijadikan data utama
+// Bangun array pertanyaan dari sumber (sidangNyata atau sumber lain)
 export const questions: FlatQuestion[] = allPersonSets.flatMap(ps =>
   ps.sets.flatMap((set: any[], setIndex: number) =>
     set.map((q: any) => ({
@@ -24,10 +24,11 @@ export const questions: FlatQuestion[] = allPersonSets.flatMap(ps =>
 /**
  * Meratakan array PersonSet[] atau array apapun yang berisi object { person, sets }.
  * Menghasilkan FlatQuestion[] dengan setIndex yang benar.
+ * KEBIJAKAN: kembalikan hasil terbalik (akhir -> awal) sesuai permintaan pengguna.
  */
 export const flattenSets = (sets: any): FlatQuestion[] => {
   if (!Array.isArray(sets)) return [];
-  return sets.flatMap((item: any) => {
+  const result = sets.flatMap((item: any) => {
     // PersonSet: { person: string, sets: Question[][] }
     if (item && typeof item === 'object' && 'person' in item && 'sets' in item && Array.isArray(item.sets)) {
       return item.sets.flatMap((set: any[], setIndex: number) =>
@@ -43,8 +44,11 @@ export const flattenSets = (sets: any): FlatQuestion[] => {
     // Bukan PersonSet — kembalikan kosong
     return [];
   });
+  // Balik urutan sehingga elemen terakhir menjadi yang pertama
+  return result.slice().reverse();
 };
 
 export function getAllQuestions(): FlatQuestion[] {
-  return questions;
+  // Kembalikan salinan terbalik agar urutan akhir menjadi urutan awal
+  return questions.slice().reverse();
 }
