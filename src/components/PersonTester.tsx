@@ -1,71 +1,113 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { getQuestionsForPerson } from '@/lib/debate';
+import CountdownTimer from '@/components/CountdownTimer';
 
 const ALL_PERSONS = ['Edi', 'Ridwan', 'Susanto', 'Suprapti', 'Eka', 'Jumiati'];
+type Phase = 'idle' | 'question' | 'waitAnswer' | 'result' | 'done';
 
 export default function PersonTester() {
   const [selectedPerson, setSelectedPerson] = useState<string | null>(null);
   const [questions, setQuestions] = useState<any[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [showResult, setShowResult] = useState(false);
+  const [phase, setPhase] = useState<Phase>('idle');
   const [correctCount, setCorrectCount] = useState(0);
   const [wrongCount, setWrongCount] = useState(0);
 
   const currentQuestion = questions[currentIndex] ?? null;
 
-  const choosePerson = (person: string) => {
-    setSelectedPerson(person);
-    setCurrentIndex(0);
-    setSelectedAnswer(null);
-    setShowResult(false);
-    setCorrectCount(0);
-    setWrongCount(0);
-    setQuestions(getQuestionsForPerson(person));
-  };
-
-  const speakQuestion = (text: string) => {
+  const speakQuestion = useCallback((text: string) => {
     try {
       if (!('speechSynthesis' in window)) return;
       const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'id-ID';
+      utterance.rate = 1;
+      utterance.pitch = 1;
+      utterance.onstart = () => setPhase('question');
+      utterance.onend = () => setPhase('waitAnswer');
+      utterance.onerror = () => setTimeout(() => setPhase('waitAnswer'), 400);
       window.speechSynthesis.cancel();
       window.speechSynthesis.speak(utterance);
     } catch {
-      // ignore TTS errors silently
+      setTimeout(() => setPhase('waitAnswer'), 600);
     }
-  };
+  }, []);
 
-  const checkAnswer = () => {
-    if (!currentQuestion || selectedAnswer === null) return;
+  const goToQuestion = useCallback((index: number) => {
+    const safeIndex = Math.min(Math.max(index, 0), Math.max(questions.length - 1, 0));
+    setCurrentIndex(safeIndex);
+    setSelectedAnswer(null);
+    setPhase('question');
+    const q = questions[safeIndex];
+    if (q) {
+      speakQuestion(q.text);
+    }
+  }, [questions, speakQuestion]);
 
-    const correct = (currentQuestion.setIndex ?? 0) + 1;
-    const isCorrect = selectedAnswer === correct;
+  const submitAnswer = useCallback((answer: number | null) => {
+    if (!currentQuestion) return;
+    const correctAnswer = (currentQuestion.setIndex ?? 0) + 1;
+    const isCorrect = answer !== null && answer === correctAnswer;
 
-    setShowResult(true);
+    setPhase('result');
+    setSelectedAnswer(answer);
+
     if (isCorrect) {
       setCorrectCount((v) => v + 1);
     } else {
       setWrongCount((v) => v + 1);
     }
-  };
 
-  const nextQuestion = () => {
+    const nextDelay = 1400;
+    setTimeout(() => {
+      const nextIndex = currentIndex + 1;
+      if (nextIndex < questions.length) {
+        goToQuestion(nextIndex);
+      } else {
+        setPhase('done');
+      }
+    }, nextDelay);
+  }, [currentQuestion, currentIndex, questions.length, goToQuestion]);
+
+  const choosePerson = (person: string) => {
+    const list = getQuestionsForPerson(person);
+    setSelectedPerson(person);
+    setQuestions(list);
+    setCurrentIndex(0);
     setSelectedAnswer(null);
-    setShowResult(false);
-    setCurrentIndex((idx) => {
-      const next = idx + 1;
-      return next < questions.length ? next : idx;
-    });
+    setCorrectCount(0);
+    setWrongCount(0);
+    setPhase('idle');
+
+    if (list.length > 0) {
+      setTimeout(() => {
+        const q = list[0];
+        setCurrentIndex(0);
+        setPhase('question');
+        if (q) {
+          speakQuestion(q.text);
+        }
+      }, 150);
+    } else {
+      setPhase('done');
+    }
   };
 
-  const previousQuestion = () => {
-    setSelectedAnswer(null);
-    setShowResult(false);
-    setCurrentIndex((idx) => (idx > 0 ? idx - 1 : 0));
+  const handleAnswerClick = (answer: 1 | 2) => {
+    if (phase !== 'waitAnswer') return;
+    submitAnswer(answer);
   };
 
-  const isFinished = currentIndex >= questions.length;
+  useEffect(() => {
+    if (!selectedPerson || questions.length === 0 || phase !== 'idle') return;
+    if (questions[0]) {
+      setCurrentIndex(0);
+      speakQuestion(questions[0].text);
+    }
+  }, [selectedPerson, questions, phase, speakQuestion]);
+
+  const isFinished = phase === 'done' || (questions.length > 0 && currentIndex >= questions.length);
 
   return (
     <div className="p-4 text-sm">
@@ -93,40 +135,32 @@ export default function PersonTester() {
                 <div className="mt-2 text-white">{currentQuestion.text}</div>
               </div>
 
-              <div className="flex gap-2">
-                <Button size="sm" variant="outline" onClick={() => speakQuestion(currentQuestion.text)}>
-                  Baca
-                </Button>
-                <Button size="sm" variant="outline" onClick={() => setSelectedAnswer(1)}>
-                  Jawaban 1
-                </Button>
-                <Button size="sm" variant="outline" onClick={() => setSelectedAnswer(2)}>
-                  Jawaban 2
-                </Button>
-              </div>
+              {phase === 'question' && (
+                <div className="text-xs text-cyan-300 font-semibold">🔊 Membacakan pertanyaan…</div>
+              )}
 
-              <div className="mt-2 text-xs text-white/70">
-                Pilihan saat ini: {selectedAnswer === null ? 'Belum dipilih' : `Jawaban ${selectedAnswer}`}
-              </div>
+              {phase === 'waitAnswer' && (
+                <>
+                  <div className="text-xs text-yellow-300 font-semibold">⏱️ Pilih jawaban sekarang…</div>
+                  <CountdownTimer onTimeout={() => submitAnswer(null)} isRunning duration={3} />
+                </>
+              )}
 
-              {showResult && (
+              {phase === 'result' && (
                 <div className={`rounded-md p-2 text-sm font-semibold ${
-                  selectedAnswer === (currentQuestion.setIndex ?? 0) + 1 ? 'bg-green-500/20 text-green-300' : 'bg-red-500/20 text-red-300'
+                  selectedAnswer === ((currentQuestion.setIndex ?? 0) + 1) ? 'bg-green-500/20 text-green-300' : 'bg-red-500/20 text-red-300'
                 }`}>
-                  {selectedAnswer === (currentQuestion.setIndex ?? 0) + 1 ? 'Benar' : 'Salah'}
-                  {' — Jawaban benar: ' + ((currentQuestion.setIndex ?? 0) + 1)}
+                  {selectedAnswer === ((currentQuestion.setIndex ?? 0) + 1) ? 'Benar' : 'Salah'}
+                  {' — Jawaban benar: ' + (((currentQuestion.setIndex ?? 0) + 1))}
                 </div>
               )}
 
-              <div className="flex gap-2">
-                <Button size="sm" onClick={checkAnswer}>Cek Jawaban</Button>
-                <Button size="sm" variant="ghost" onClick={previousQuestion} disabled={currentIndex === 0}>
-                  Sebelumnya
-                </Button>
-                <Button size="sm" variant="ghost" onClick={nextQuestion} disabled={currentIndex >= questions.length - 1}>
-                  Selanjutnya
-                </Button>
-              </div>
+              {phase === 'waitAnswer' && (
+                <div className="flex gap-2">
+                  <Button size="sm" variant="outline" onClick={() => handleAnswerClick(1)}>Jawaban 1</Button>
+                  <Button size="sm" variant="outline" onClick={() => handleAnswerClick(2)}>Jawaban 2</Button>
+                </div>
+              )}
             </div>
           )}
 
@@ -134,8 +168,10 @@ export default function PersonTester() {
             <div className="text-white/60">Tidak ada pertanyaan untuk peserta ini.</div>
           )}
 
-          {!isFinished && questions.length > 0 && currentIndex >= questions.length && (
-            <div className="text-white/70">Semua pertanyaan selesai.</div>
+          {phase === 'done' && (
+            <div className="rounded-md border border-emerald-500/40 bg-emerald-500/10 p-3 text-emerald-300 font-semibold">
+              Selesai. Skor akhir: {correctCount} benar / {wrongCount} salah.
+            </div>
           )}
         </div>
       )}
