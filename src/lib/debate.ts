@@ -1,3 +1,5 @@
+import { duelSets } from '../data/duelMode';
+
 export type Role = 'duit semilyar' | 'urip kepenak' | 'Kamulyan jagad';
 
 export interface Question {
@@ -17,9 +19,45 @@ export interface FlatQuestion extends Question {
   setIndex: number;
 }
 
-export function getAllQuestions(): FlatQuestion[] {
-  // Sementara return kosong, nanti diisi dari questions.ts
-  return [];
+export function getQuestionsForPerson(person: string): FlatQuestion[] {
+  const personQuestions = duelSets.find((entry) => entry.person === person);
+  if (!personQuestions) return [];
+
+  const flat: FlatQuestion[] = [];
+  let globalIndex = 0;
+
+  personQuestions.sets.forEach((set, setIndex) => {
+    set.forEach((question) => {
+      flat.push({
+        ...question,
+        globalIndex: globalIndex++,
+        person,
+        setIndex,
+      });
+    });
+  });
+
+  return flat;
 }
 
-export const allPersonSets: PersonSet[] = [];
+export function getAllQuestions(): FlatQuestion[] {
+  const flat: FlatQuestion[] = [];
+  let globalIndex = 0;
+
+  duelSets.forEach((personSet) => {
+    personSet.sets.forEach((set, setIndex) => {
+      set.forEach((question) => {
+        flat.push({
+          ...question,
+          globalIndex: globalIndex++,
+          person: personSet.person,
+          setIndex,
+        });
+      });
+    });
+  });
+
+  return flat;
+}
+
+export const allPersonSets: PersonSet[] = duelSets;
