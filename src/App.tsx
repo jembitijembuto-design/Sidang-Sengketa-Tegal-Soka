@@ -461,7 +461,8 @@ export default function App() {
     setPhase('playing');
     setLastResult(null);
     setIsAutoPlaying(true);
-    setTimeout(() => speakQuestionRef.current(safeIndex), 200);
+    // Mulai langsung tanpa delay agar tombol Mulai segera memutar pertanyaan
+    speakQuestionRef.current(safeIndex);
   }, [shuffledQuestions.length]);
 
   const advanceToNext = useCallback(() => {
@@ -476,11 +477,11 @@ export default function App() {
       setCurrentIndex(0);
       setSessionCount(c => c + 1);
       toast.success('Sesi selesai! Diacak ulang!');
-      if (autoPlayRef.current) setTimeout(() => startQuizFromIndex(0), 1200);
+      if (autoPlayRef.current) startQuizFromIndex(0);
       return;
     }
     setCurrentIndex(next);
-    if (autoPlayRef.current) setTimeout(() => speakQuestionRef.current(next), 800);
+    if (autoPlayRef.current) speakQuestionRef.current(next);
   }, [getQuestions, startQuizFromIndex]);
 
   const resetScores = useCallback(() => {
@@ -528,7 +529,7 @@ export default function App() {
     setDuelRound(null);
     resetScores();
     setIsAutoPlaying(true);
-    setTimeout(() => startQuizFromIndex(0), 250);
+    startQuizFromIndex(0);
     toast.success(newMode ? '🎭 Pengecoh AKTIF!' : '🔀 Normal aktif!');
   }, [stop, resetScores, getQuestions, startQuizFromIndex]);
 
@@ -549,7 +550,7 @@ export default function App() {
     setDuelRound(null);
     resetScores();
     setIsAutoPlaying(true);
-    setTimeout(() => startQuizFromIndex(0), 250);
+    startQuizFromIndex(0);
     toast.success(newMode ? '📖 Pendalaman AKTIF!' : '📝 Standar aktif!');
   }, [stop, resetScores, startQuizFromIndex]);
 
@@ -570,7 +571,7 @@ export default function App() {
     setDuelRound(null);
     resetScores();
     setIsAutoPlaying(true);
-    setTimeout(() => startQuizFromIndex(0), 250);
+    startQuizFromIndex(0);
     toast.success(newMode ? '⚖️ Sidang Nyata AKTIF!' : '📝 Standar aktif!');
   }, [stop, resetScores, startQuizFromIndex]);
 
@@ -587,7 +588,7 @@ export default function App() {
     setDuelRound(null);
     resetScores();
     setIsAutoPlaying(true);
-    setTimeout(() => startQuizFromIndex(0), 250);
+    startQuizFromIndex(0);
     toast.success(newMode ? '🏛️ Keputusan Sidang AKTIF!' : '📝 Standar aktif!');
   }, [resetScores, startQuizFromIndex]);
 
@@ -614,7 +615,7 @@ export default function App() {
     setDuelRound(null);
     resetScores();
     setIsAutoPlaying(true);
-    setTimeout(() => startQuizFromIndex(0), 250);
+    startQuizFromIndex(0);
     toast.success(newMode ? '🎲 Undian AKTIF!' : '📝 Standar aktif!');
   }, [stop, resetScores, startQuizFromIndex]);
 
@@ -656,7 +657,7 @@ export default function App() {
     setCurrentProlog(null);
     setDuelRound(null);
     setIsAutoPlaying(true);
-    setTimeout(() => startQuizFromIndex(0), 250);
+    startQuizFromIndex(0);
     toast.success(`⚔️ DUEL ${size}: ${picked.join(' vs ')} · Saldo tetap tersimpan · Taruhan Rp${DUEL_BET.toLocaleString('id-ID')}`);
   }, [stop, startQuizFromIndex]);
 
@@ -708,7 +709,7 @@ export default function App() {
     setCurrentProlog(null);
     setDuelRound(null);
     setIsAutoPlaying(true);
-    setTimeout(() => startQuizFromIndex(0), 300);
+    startQuizFromIndex(0);
     toast.success('Diacak ulang! Saldo & skor tetap tersimpan.');
   }, [stop, getQuestions, startQuizFromIndex]);
 
@@ -871,7 +872,7 @@ export default function App() {
     setDuelRound(null);
     const next = Math.min(currentIndex + 1, shuffledQuestions.length - 1);
     setCurrentIndex(next);
-    if (isAutoPlaying) setTimeout(() => speakQuestion(next), 500);
+    if (isAutoPlaying) speakQuestion(next);
   }, [currentIndex, isAutoPlaying, shuffledQuestions.length, speakQuestion, stop]);
 
   const handlePrev = useCallback(() => {
@@ -881,7 +882,7 @@ export default function App() {
     setDuelRound(null);
     const prev = Math.max(currentIndex - 1, 0);
     setCurrentIndex(prev);
-    if (isAutoPlaying) setTimeout(() => speakQuestion(prev), 500);
+    if (isAutoPlaying) speakQuestion(prev);
   }, [currentIndex, isAutoPlaying, speakQuestion, stop]);
 
   const currentQ = shuffledQuestions[currentIndex];
