@@ -18,6 +18,7 @@ import { Toaster } from '@/components/ui/sonner';
 import { toast } from 'sonner';
 import { getRandomProlog } from '@/data/prologues';
 import LoginGate from './LoginGate';
+import { resolveCorrectAnswer } from '@/lib/debate';
 
 function shuffleVariedPattern(questions: FlatQuestion[]): FlatQuestion[] {
   const groups: Record<string, FlatQuestion[]> = {};
@@ -461,7 +462,6 @@ export default function App() {
     setPhase('playing');
     setLastResult(null);
     setIsAutoPlaying(true);
-    // Mulai langsung tanpa delay agar tombol Mulai segera memutar pertanyaan
     speakQuestionRef.current(safeIndex);
   }, [shuffledQuestions.length]);
 
@@ -767,7 +767,7 @@ export default function App() {
 
   const handleAnswer = useCallback((chosenAnswer: 1 | 2) => {
     const q = questionsRef.current[currentIndexRef.current];
-    const correctAnswer = q.setIndex + 1;
+    const correctAnswer = resolveCorrectAnswer(q) ?? q.setIndex + 1;
     const isCorrect = chosenAnswer === correctAnswer;
     setPhase('feedback');
     setLastResult(isCorrect ? 'correct' : 'wrong');
@@ -798,7 +798,7 @@ export default function App() {
 
   const handleTimeout = useCallback(() => {
     const q = questionsRef.current[currentIndexRef.current];
-    const correctAnswer = q.setIndex + 1;
+    const correctAnswer = resolveCorrectAnswer(q) ?? q.setIndex + 1;
     setPhase('feedback');
     setLastResult('wrong');
     setScores(prev => ({
@@ -913,7 +913,7 @@ export default function App() {
               Narator Sidang SOKO
             </h1>
             <p className="text-[10px] text-white/60 mt-0.5">
-              {duelMode ? `⚔️ Duel ${duelPlayers.length}: ${duelPlayers.join(', ')}` : undianMode ? '🎲 Undian' : sidangNyataMode ? '⚖️ Sidang Nyata' : keputusanMode ? '🏛️ Keputusan' : deepMode ? '📖 Pendalaman' : '🧠 Normal'}
+              {duelMode ? `⚔️ Duel ${duelPlayers.length}: ${duelPlayers.join(', ')}` : undianMode ? '🎲 Undian' : sidangNyataMode ? '⚖️ Sidang Nyata' : keputusanMode ? '🏛️ Keputusan Sidang' : deepMode ? '📖 Pendalaman' : '📝 Standar'}
               {decoyMode ? ' • 🎭 Pengecoh' : ' • 🔀 Acak'}
               {prologMode ? ' • 🎙️ Prolog' : ''}
             </p>
@@ -996,7 +996,7 @@ export default function App() {
         {currentQ && isActive && !duelMode && (
           <div className="mb-2 text-center flex flex-col items-center gap-0.5 bg-[#3d1111]">
             <span className="text-[#0cf70c]" style={{ textShadow: personGlowShadows[currentQ.person] }}>{currentQ.person}</span>
-            <span className="text-[#0ef00e]" style={{ opacity: 0.85 }}>Jawaban {currentQ.setIndex + 1}</span>
+            <span className="text-[#0ef00e]" style={{ opacity: 0.85 }}>Jawaban {resolveCorrectAnswer(currentQ) ?? currentQ.setIndex + 1}</span>
           </div>
         )}
 
@@ -1021,7 +1021,7 @@ export default function App() {
                 Punya <strong className="text-white">{currentQ.person}</strong>
                 {lastResult === 'wrong' && (
                   <span className="block font-bold text-[#ede1e1]">
-                    Benar: Jawaban {currentQ.setIndex + 1}
+                    Benar: Jawaban {resolveCorrectAnswer(currentQ) ?? currentQ.setIndex + 1}
                   </span>
                 )}
               </p>
@@ -1043,7 +1043,7 @@ export default function App() {
               ?
             </p>
             {duelRound.questions.map((dq, i) => (
-              <button key={i} onClick={() => handleDuelIdentify(i)} className='w-full p-4 rounded-xl bg-black/50 border border-white/20 text-white text-left hover:border-amber-400/50 transition-colors duration-200'>
+              <button key={i} onClick={() => handleDuelIdentify(i)} className='w-full p-4 rounded-xl bg-black/50 border border-white/20 text-white text-left hover:border-amber-400/50 transition-colors'>
                 <span className="font-bold text-amber-400">Pertanyaan {String.fromCharCode(65 + i)}</span>
                 <p className="mt-2 text-sm text-white/90">{dq.text}</p>
               </button>

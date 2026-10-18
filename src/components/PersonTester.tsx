@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
-import { getQuestionsForPerson } from '@/lib/debate';
+import { buildPersonModeQuestions, resolveCorrectAnswer } from '@/lib/debate';
 import CountdownTimer from '@/components/CountdownTimer';
 
 const ALL_PERSONS = ['Edi', 'Ridwan', 'Susanto', 'Suprapti', 'Eka', 'Jumiati'];
@@ -16,15 +16,6 @@ export default function PersonTester() {
   const [wrongCount, setWrongCount] = useState(0);
 
   const currentQuestion = questions[currentIndex] ?? null;
-
-  const getCorrectAnswer = useCallback((q: any): number | null => {
-    if (!q) return null;
-    if (typeof q.correctAnswer === 'number') return q.correctAnswer;
-    if (typeof q.answer === 'number') return q.answer;
-    if (typeof q.answerIndex === 'number') return q.answerIndex;
-    if (typeof q.setIndex === 'number') return q.setIndex + 1;
-    return null;
-  }, []);
 
   const speakQuestion = useCallback((text: string) => {
     try {
@@ -56,7 +47,7 @@ export default function PersonTester() {
 
   const submitAnswer = useCallback((answer: number | null) => {
     if (!currentQuestion) return;
-    const correctAnswer = getCorrectAnswer(currentQuestion);
+    const correctAnswer = resolveCorrectAnswer(currentQuestion);
     const isCorrect = answer !== null && correctAnswer !== null && answer === correctAnswer;
 
     setPhase('result');
@@ -77,38 +68,38 @@ export default function PersonTester() {
         setPhase('done');
       }
     }, nextDelay);
-  }, [currentQuestion, currentIndex, questions.length, goToQuestion, getCorrectAnswer]);
+  }, [currentQuestion, currentIndex, questions.length, goToQuestion]);
 
-  // Interleave questions by role to avoid same-role runs
   const interleaveByRole = useCallback((items: any[]) => {
     const groups: Record<string, any[]> = {};
     for (const it of items) {
-      const r = it.role || 'other';
-      if (!groups[r]) groups[r] = [];
-      groups[r].push(it);
+      const key = it?.role || 'other';
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(it);
     }
-    // shuffle each role group
-    for (const k of Object.keys(groups)) {
-      for (let i = groups[k].length - 1; i > 0; i--) {
+
+    for (const key of Object.keys(groups)) {
+      for (let i = groups[key].length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [groups[k][i], groups[k][j]] = [groups[k][j], groups[k][i]];
+        [groups[key][i], groups[key][j]] = [groups[key][j], groups[key][i]];
       }
     }
+
     const roleKeys = Object.keys(groups);
-    // randomize role order to avoid predictable cycles
     for (let i = roleKeys.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [roleKeys[i], roleKeys[j]] = [roleKeys[j], roleKeys[i]];
     }
+
     const out: any[] = [];
-    let remaining = true;
-    while (remaining) {
-      remaining = false;
-      for (const rk of roleKeys) {
-        const arr = groups[rk];
-        if (arr && arr.length) {
-          out.push(arr.shift());
-          remaining = true;
+    let hasMore = true;
+    while (hasMore) {
+      hasMore = false;
+      for (const key of roleKeys) {
+        const bucket = groups[key];
+        if (bucket && bucket.length > 0) {
+          out.push(bucket.shift());
+          hasMore = true;
         }
       }
     }
@@ -116,24 +107,8 @@ export default function PersonTester() {
   }, []);
 
   const choosePerson = (person: string) => {
-    const rawList = getQuestionsForPerson(person);
-
-    const grouped: Record<string, any[]> = {};
-    for (const q of rawList) {
-      const key = String(q.id ?? `${q.person}-${q.role}-${q.setIndex}`);
-      if (!grouped[key]) grouped[key] = [];
-      grouped[key].push(q);
-    }
-
-    const picked = Object.values(grouped)
-      .map((group) => {
-        if (!group.length) return null;
-        return group[Math.floor(Math.random() * group.length)];
-      })
-      .filter(Boolean) as any[];
-
-    // interleave by role to reduce repeating similar clusters in sequence
-    const arranged = interleaveByRole(picked);
+    const pool = buildPersonModeQuestions(person);
+    const arranged = interleaveByRole(pool);
 
     setSelectedPerson(person);
     setQuestions(arranged);
@@ -211,10 +186,10 @@ export default function PersonTester() {
 
               {phase === 'result' && (
                 <div className={`rounded-md p-2 text-sm font-semibold ${
-                  selectedAnswer === getCorrectAnswer(currentQuestion) ? 'bg-green-500/20 text-green-300' : 'bg-red-500/20 text-red-300'
+                  selectedAnswer === resolveCorrectAnswer(currentQuestion) ? 'bg-green-500/20 text-green-300' : 'bg-red-500/20 text-red-300'
                 }`}>
-                  {selectedAnswer === getCorrectAnswer(currentQuestion) ? 'Benar' : 'Salah'}
-                  {' — Jawaban benar: ' + (getCorrectAnswer(currentQuestion) ?? 'N/A')}
+                  {selectedAnswer === resolveCorrectAnswer(currentQuestion) ? 'Benar' : 'Salah'}
+                  {' — Jawaban benar: ' + (resolveCorrectAnswer(currentQuestion) ?? 'N/A')}
                 </div>
               )}
 
