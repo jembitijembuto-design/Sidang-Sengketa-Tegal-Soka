@@ -79,6 +79,42 @@ export default function PersonTester() {
     }, nextDelay);
   }, [currentQuestion, currentIndex, questions.length, goToQuestion, getCorrectAnswer]);
 
+  // Interleave questions by role to avoid same-role runs
+  const interleaveByRole = useCallback((items: any[]) => {
+    const groups: Record<string, any[]> = {};
+    for (const it of items) {
+      const r = it.role || 'other';
+      if (!groups[r]) groups[r] = [];
+      groups[r].push(it);
+    }
+    // shuffle each role group
+    for (const k of Object.keys(groups)) {
+      for (let i = groups[k].length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [groups[k][i], groups[k][j]] = [groups[k][j], groups[k][i]];
+      }
+    }
+    const roleKeys = Object.keys(groups);
+    // randomize role order to avoid predictable cycles
+    for (let i = roleKeys.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [roleKeys[i], roleKeys[j]] = [roleKeys[j], roleKeys[i]];
+    }
+    const out: any[] = [];
+    let remaining = true;
+    while (remaining) {
+      remaining = false;
+      for (const rk of roleKeys) {
+        const arr = groups[rk];
+        if (arr && arr.length) {
+          out.push(arr.shift());
+          remaining = true;
+        }
+      }
+    }
+    return out;
+  }, []);
+
   const choosePerson = (person: string) => {
     const rawList = getQuestionsForPerson(person);
 
@@ -96,22 +132,20 @@ export default function PersonTester() {
       })
       .filter(Boolean) as any[];
 
-    for (let i = picked.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [picked[i], picked[j]] = [picked[j], picked[i]];
-    }
+    // interleave by role to reduce repeating similar clusters in sequence
+    const arranged = interleaveByRole(picked);
 
     setSelectedPerson(person);
-    setQuestions(picked);
+    setQuestions(arranged);
     setCurrentIndex(0);
     setSelectedAnswer(null);
     setCorrectCount(0);
     setWrongCount(0);
     setPhase('idle');
 
-    if (picked.length > 0) {
+    if (arranged.length > 0) {
       setTimeout(() => {
-        const q = picked[0];
+        const q = arranged[0];
         setCurrentIndex(0);
         setPhase('question');
         if (q) {
