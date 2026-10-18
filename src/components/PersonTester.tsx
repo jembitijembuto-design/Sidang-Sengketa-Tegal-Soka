@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
-import { buildPersonModeQuestions, resolveCorrectAnswer } from '@/lib/debate';
+import { getQuestionsForPerson } from '@/data/duelMode';
 import CountdownTimer from '@/components/CountdownTimer';
 
 const ALL_PERSONS = ['Edi', 'Ridwan', 'Susanto', 'Suprapti', 'Eka', 'Jumiati'];
