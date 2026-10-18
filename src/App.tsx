@@ -13,12 +13,12 @@ import PunishmentButtons from '@/components/PunishmentButtons';
 import RewardButtons from '@/components/RewardButtons';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Play, Pause, Square, SkipForward, SkipBack, Volume2, VolumeX, Shuffle, ShieldAlert, MessageSquareWarning, BookOpen, Gavel, Landmark, Dices, Swords } from 'lucide-react';
+import { Play, Pause, Square, SkipForward, SkipBack, Volume2, VolumeX, Shuffle, ShieldAlert, MessageSquareWarning, BookOpen, Gavel, Landmark, Dices, Swords, Users } from 'lucide-react';
 import { Toaster } from '@/components/ui/sonner';
 import { toast } from 'sonner';
 import { getRandomProlog } from '@/data/prologues';
 import LoginGate from './LoginGate';
-import { resolveCorrectAnswer } from '@/lib/debate';
+import { resolveCorrectAnswer, buildPersonModeQuestions } from '@/lib/debate';
 
 function shuffleVariedPattern(questions: FlatQuestion[]): FlatQuestion[] {
   const groups: Record<string, FlatQuestion[]> = {};
@@ -249,6 +249,9 @@ export default function App() {
   const undianModeRef = useRef(false);
   const [duelMode, setDuelMode] = useState(false);
   const duelModeRef = useRef(false);
+  const [personMode, setPersonMode] = useState(false);
+  const personModeRef = useRef(false);
+  const [personTarget, setPersonTarget] = useState<string | null>(null);
   const [duelPlayers, setDuelPlayers] = useState<string[]>([]);
   const duelPlayersRef = useRef<string[]>([]);
   const [duelRound, setDuelRound] = useState<{
@@ -434,6 +437,7 @@ export default function App() {
   useEffect(() => { keputusanModeRef.current = keputusanMode; }, [keputusanMode]);
   useEffect(() => { undianModeRef.current = undianMode; }, [undianMode]);
   useEffect(() => { duelModeRef.current = duelMode; }, [duelMode]);
+  useEffect(() => { personModeRef.current = personMode; }, [personMode]);
   useEffect(() => { duelPlayersRef.current = duelPlayers; }, [duelPlayers]);
   useEffect(() => { autoPlayRef.current = isAutoPlaying; }, [isAutoPlaying]);
   useEffect(() => { currentIndexRef.current = currentIndex; }, [currentIndex]);
@@ -442,6 +446,9 @@ export default function App() {
   const getQuestions = useCallback(() => {
     if (duelModeRef.current) {
       return buildDuelMixedQuestions(duelPlayersRef.current.length ? duelPlayersRef.current : ALL_PERSONS);
+    }
+    if (personModeRef.current && personTarget) {
+      return buildPersonModeQuestions(personTarget);
     }
     if (undianModeRef.current) {
       const all = [...flattenSets(keputusanSidangSets), ...flattenSets(pendalamanSets), ...flattenSets(sidangNyataSets)];
@@ -454,7 +461,7 @@ export default function App() {
     if (keputusanModeRef.current) return flattenSets(keputusanSidangSets);
     if (sidangNyataModeRef.current) return flattenSets(sidangNyataSets);
     return deepModeRef.current ? flattenSets(pendalamanSets) : getAllQuestions();
-  }, []);
+  }, [personTarget]);
 
   const startQuizFromIndex = useCallback((index: number) => {
     const safeIndex = Math.min(Math.max(index, 0), Math.max(shuffledQuestions.length - 1, 0));
@@ -505,6 +512,9 @@ export default function App() {
     duelModeRef.current = false;
     setDuelPlayers([]);
     duelPlayersRef.current = [];
+    setPersonMode(false);
+    personModeRef.current = false;
+    setPersonTarget(null);
   };
 
   const handleToggleProlog = useCallback(() => {
@@ -750,6 +760,12 @@ export default function App() {
       speak(parts.join('. '), () => setPhase('duelIdentify'));
       return;
     }
+    if (personModeRef.current) {
+      // Person mode follows standard flow but questions are already person-focused
+      setPhase('playing');
+      speak(`Dari ${q.role}. ${q.text}`, () => setPhase('waitAnswer'));
+      return;
+    }
     if (prologModeRef.current) {
       const prolog = getRandomProlog(index, q.person, ALL_PERSONS);
       setCurrentProlog(prolog);
@@ -913,7 +929,7 @@ export default function App() {
               Narator Sidang SOKO
             </h1>
             <p className="text-[10px] text-white/60 mt-0.5">
-              {duelMode ? `⚔️ Duel ${duelPlayers.length}: ${duelPlayers.join(', ')}` : undianMode ? '🎲 Undian' : sidangNyataMode ? '⚖️ Sidang Nyata' : keputusanMode ? '🏛️ Keputusan Sidang' : deepMode ? '📖 Pendalaman' : '📝 Standar'}
+              {duelMode ? `⚔️ Duel ${duelPlayers.length}: ${duelPlayers.join(', ')}` : personMode ? personTarget ? `👤 Mode Person · ${personTarget}` : '👤 Mode Person' : undianMode ? '🎲 Undian' : sidangNyataMode ? '⚖️ Sidang Nyata' : keputusanMode ? '🏛️ Keputusan Sidang' : deepMode ? '📖 Pendalaman' : '📝 Standar'}
               {decoyMode ? ' • 🎭 Pengecoh' : ' • 🔀 Acak'}
               {prologMode ? ' • 🎙️ Prolog' : ''}
             </p>
@@ -942,6 +958,10 @@ export default function App() {
               <Dices className="w-4 h-4" />
             </button>
 
+            <button onClick={() => { clearOtherModes(); setPersonMode(true); personModeRef.current = true; setPersonTarget(null); toast.success('👤 Mode Person aktif — pilih peserta.'); }} className={`glow-btn ${personMode ? 'glow-btn--active glow-btn--cyan' : 'glow-btn--cyan'}`} title="Mode Person">
+              <Users className="w-4 h-4" />
+            </button>
+
             {([2, 3, 4, 5, 6] as const).map(n => (
               <button key={n} onClick={() => startDuel(n)} className={`glow-btn ${duelMode && duelPlayers.length === n ? 'glow-btn--active glow-btn--amber' : 'glow-btn--amber'}`} title={`Duel ${n}`}>
                 <Swords className="w-3 h-3 text-[#f5a30c]" />
@@ -968,9 +988,46 @@ export default function App() {
       </div>
 
       <main className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 py-20">
-        <div className="mb-4">
-          <PersonTester />
-        </div>
+-        <div className="mb-4">
+-          <PersonTester />
+-        </div>
++        <div className="mb-4 w-full flex justify-center">
++          {personMode ? (
++            <div className="flex flex-wrap gap-2 justify-center">
++              {!personTarget ? ALL_PERSONS.map(person => (
++                <Button key={person} size="sm" onClick={() => {
++                  // choose person and load into main flow
++                  const qs = buildPersonModeQuestions(person);
++                  setPersonTarget(person);
++                  personModeRef.current = true;
++                  setShuffledQuestions(qs);
++                  setSessionCount(c => c + 1);
++                  setCurrentIndex(0);
++                  setCurrentProlog(null);
++                  setDuelRound(null);
++                  setScores(createInitialScores());
++                  setIsAutoPlaying(true);
++                  startQuizFromIndex(0);
++                  toast.success(`👤 Person ${person} dipilih — mode utama dijalankan.`);
++                }}>{person}</Button>
++              )) : (
++                <div className="flex items-center gap-3">
++                  <div className="text-white">Peserta terpilih: <strong className="ml-2">{personTarget}</strong></div>
++                  <Button size="sm" variant="outline" onClick={() => {
++                    // clear selection and stop person mode
++                    setPersonTarget(null);
++                    setPersonMode(false);
++                    personModeRef.current = false;
++                    setShuffledQuestions(shuffleVariedPattern(getAllQuestions()));
++                    setCurrentIndex(0);
++                    setIsAutoPlaying(false);
++                    toast.success('👤 Mode Person dinonaktifkan.');
++                  }}>Batal</Button>
++                </div>
++              )}
++            </div>
++          ) : null}
++        </div>
 
         {Object.keys(duelSaldo).length > 0 && (
           <div className="mb-3 flex flex-wrap gap-2 justify-center max-w-lg">
