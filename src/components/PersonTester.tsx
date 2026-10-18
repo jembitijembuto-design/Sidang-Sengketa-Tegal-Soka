@@ -17,6 +17,15 @@ export default function PersonTester() {
 
   const currentQuestion = questions[currentIndex] ?? null;
 
+  const getCorrectAnswer = useCallback((q: any): number | null => {
+    if (!q) return null;
+    if (typeof q.correctAnswer === 'number') return q.correctAnswer;
+    if (typeof q.answer === 'number') return q.answer;
+    if (typeof q.answerIndex === 'number') return q.answerIndex;
+    if (typeof q.setIndex === 'number') return q.setIndex + 1;
+    return null;
+  }, []);
+
   const speakQuestion = useCallback((text: string) => {
     try {
       if (!('speechSynthesis' in window)) return;
@@ -47,8 +56,8 @@ export default function PersonTester() {
 
   const submitAnswer = useCallback((answer: number | null) => {
     if (!currentQuestion) return;
-    const correctAnswer = (currentQuestion.setIndex ?? 0) + 1;
-    const isCorrect = answer !== null && answer === correctAnswer;
+    const correctAnswer = getCorrectAnswer(currentQuestion);
+    const isCorrect = answer !== null && correctAnswer !== null && answer === correctAnswer;
 
     setPhase('result');
     setSelectedAnswer(answer);
@@ -68,21 +77,41 @@ export default function PersonTester() {
         setPhase('done');
       }
     }, nextDelay);
-  }, [currentQuestion, currentIndex, questions.length, goToQuestion]);
+  }, [currentQuestion, currentIndex, questions.length, goToQuestion, getCorrectAnswer]);
 
   const choosePerson = (person: string) => {
-    const list = getQuestionsForPerson(person);
+    const rawList = getQuestionsForPerson(person);
+
+    const grouped: Record<string, any[]> = {};
+    for (const q of rawList) {
+      const key = String(q.id ?? `${q.person}-${q.role}-${q.setIndex}`);
+      if (!grouped[key]) grouped[key] = [];
+      grouped[key].push(q);
+    }
+
+    const picked = Object.values(grouped)
+      .map((group) => {
+        if (!group.length) return null;
+        return group[Math.floor(Math.random() * group.length)];
+      })
+      .filter(Boolean) as any[];
+
+    for (let i = picked.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [picked[i], picked[j]] = [picked[j], picked[i]];
+    }
+
     setSelectedPerson(person);
-    setQuestions(list);
+    setQuestions(picked);
     setCurrentIndex(0);
     setSelectedAnswer(null);
     setCorrectCount(0);
     setWrongCount(0);
     setPhase('idle');
 
-    if (list.length > 0) {
+    if (picked.length > 0) {
       setTimeout(() => {
-        const q = list[0];
+        const q = picked[0];
         setCurrentIndex(0);
         setPhase('question');
         if (q) {
@@ -148,10 +177,10 @@ export default function PersonTester() {
 
               {phase === 'result' && (
                 <div className={`rounded-md p-2 text-sm font-semibold ${
-                  selectedAnswer === ((currentQuestion.setIndex ?? 0) + 1) ? 'bg-green-500/20 text-green-300' : 'bg-red-500/20 text-red-300'
+                  selectedAnswer === getCorrectAnswer(currentQuestion) ? 'bg-green-500/20 text-green-300' : 'bg-red-500/20 text-red-300'
                 }`}>
-                  {selectedAnswer === ((currentQuestion.setIndex ?? 0) + 1) ? 'Benar' : 'Salah'}
-                  {' — Jawaban benar: ' + (((currentQuestion.setIndex ?? 0) + 1))}
+                  {selectedAnswer === getCorrectAnswer(currentQuestion) ? 'Benar' : 'Salah'}
+                  {' — Jawaban benar: ' + (getCorrectAnswer(currentQuestion) ?? 'N/A')}
                 </div>
               )}
 
