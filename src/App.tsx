@@ -11,7 +11,6 @@ import QuestionCard from '@/components/QuestionCard';
 import AnswerButtons from '@/components/AnswerButtons';
 import PunishmentButtons from '@/components/PunishmentButtons';
 import RewardButtons from '@/components/RewardButtons';
-import CountdownTimer from '@/components/CountdownTimer';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Play, Pause, Square, SkipForward, SkipBack, Volume2, VolumeX, Shuffle, ShieldAlert, MessageSquareWarning, BookOpen, Gavel, Landmark, Dices, Swords } from 'lucide-react';
@@ -913,7 +912,7 @@ export default function App() {
               Narator Sidang SOKO
             </h1>
             <p className="text-[10px] text-white/60 mt-0.5">
-              {duelMode ? `⚔️ Duel ${duelPlayers.length}: ${duelPlayers.join(', ')}` : undianMode ? '🎲 Undian' : sidangNyataMode ? '⚖️ Sidang Nyata' : keputusanMode ? '🏛️ Keputusan Sidang' : deepMode ? '📖 Pendalaman' : '📝 Standar'}
+              {duelMode ? `⚔️ Duel ${duelPlayers.length}: ${duelPlayers.join(', ')}` : undianMode ? '🎲 Undian' : sidangNyataMode ? '⚖️ Sidang Nyata' : keputusanMode ? '🏛️ Keputusan' : deepMode ? '📖 Pendalaman' : '🧠 Normal'}
               {decoyMode ? ' • 🎭 Pengecoh' : ' • 🔀 Acak'}
               {prologMode ? ' • 🎙️ Prolog' : ''}
             </p>
@@ -1035,8 +1034,6 @@ export default function App() {
           </div>
         )}
 
-        {phase === 'waitAnswer' && <CountdownTimer onTimeout={handleTimeout} isRunning />}
-
         {phase === 'duelIdentify' && duelRound && currentQ && (
           <div className="mt-4 w-full max-w-md space-y-3">
             <p className="text-center text-white font-bold text-lg mb-4" style={{ textShadow: '0 0 20px rgba(251,191,36,0.7)' }}>
@@ -1045,7 +1042,7 @@ export default function App() {
               ?
             </p>
             {duelRound.questions.map((dq, i) => (
-              <button key={i} onClick={() => handleDuelIdentify(i)} className='w-full p-4 rounded-xl bg-black/50 border border-white/20 text-white text-left hover:border-amber-400/50 transition-all duration-200'>
+              <button key={i} onClick={() => handleDuelIdentify(i)} className='w-full p-4 rounded-xl bg-black/50 border border-white/20 text-white text-left hover:border-amber-400/50 transition-colors duration-200'>
                 <span className="font-bold text-amber-400">Pertanyaan {String.fromCharCode(65 + i)}</span>
                 <p className="mt-2 text-sm text-white/90">{dq.text}</p>
               </button>
