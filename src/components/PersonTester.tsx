@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { getQuestionsForPerson } from '@/data/duelMode';
+import { resolveCorrectAnswer } from '@/lib/debate';
 import CountdownTimer from '@/components/CountdownTimer';
 
 const ALL_PERSONS = ['Edi', 'Ridwan', 'Susanto', 'Suprapti', 'Eka', 'Jumiati'];
@@ -107,7 +108,8 @@ export default function PersonTester() {
   }, []);
 
   const choosePerson = (person: string) => {
-    const pool = buildPersonModeQuestions(person);
+    // Ambil SEMUA pertanyaan peserta langsung dari bank Mode Duel (tidak melakukan sampling)
+    const pool = getQuestionsForPerson(person);
     const arranged = interleaveByRole(pool);
 
     setSelectedPerson(person);
