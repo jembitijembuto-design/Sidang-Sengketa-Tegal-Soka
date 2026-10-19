@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { getQuestionsForPerson } from '@/data/duelMode';
 import { resolveCorrectAnswer } from '@/lib/debate';
-import CountdownTimer from '@/components/CountdownTimer';
+import { toast } from 'sonner';
 
 const ALL_PERSONS = ['Edi', 'Ridwan', 'Susanto', 'Suprapti', 'Eka', 'Jumiati'];
 type Phase = 'idle' | 'question' | 'waitAnswer' | 'result' | 'done';
@@ -35,6 +35,14 @@ export default function PersonTester() {
     }
   }, []);
 
+  function playApplause() {
+    try {
+      const a = new Audio('/audio/applause1.mp3');
+      a.volume = 1;
+      a.play().catch(() => {});
+    } catch {}
+  }
+
   const goToQuestion = useCallback((index: number) => {
     const safeIndex = Math.min(Math.max(index, 0), Math.max(questions.length - 1, 0));
     setCurrentIndex(safeIndex);
@@ -56,6 +64,7 @@ export default function PersonTester() {
 
     if (isCorrect) {
       setCorrectCount((v) => v + 1);
+      playApplause();
     } else {
       setWrongCount((v) => v + 1);
     }
@@ -112,17 +121,23 @@ export default function PersonTester() {
     const pool = getQuestionsForPerson(person);
     const arranged = interleaveByRole(pool);
 
+    // Pastikan hanya pertanyaan yang punya jawaban dapat digunakan
+    const valid = arranged.filter((q) => resolveCorrectAnswer(q) !== null);
+    if (valid.length !== arranged.length) {
+      toast.error('Beberapa pertanyaan tidak memiliki jawaban yang cocok di bank jawaban — diabaikan.');
+    }
+
     setSelectedPerson(person);
-    setQuestions(arranged);
+    setQuestions(valid);
     setCurrentIndex(0);
     setSelectedAnswer(null);
     setCorrectCount(0);
     setWrongCount(0);
     setPhase('idle');
 
-    if (arranged.length > 0) {
+    if (valid.length > 0) {
       setTimeout(() => {
-        const q = arranged[0];
+        const q = valid[0];
         setCurrentIndex(0);
         setPhase('question');
         if (q) {
@@ -163,9 +178,7 @@ export default function PersonTester() {
         <div className="mt-4 rounded-xl border border-white/10 bg-black/40 p-4">
           <div className="mb-3 flex items-center justify-between gap-2">
             <h3 className="font-bold text-white">Peserta: {selectedPerson}</h3>
-            <div className="text-xs text-white/70">
-              Skor: {correctCount} benar / {wrongCount} salah
-            </div>
+            <div className="text-xs text-white/70">Skor: {correctCount} benar / {wrongCount} salah</div>
           </div>
 
           {questions.length > 0 && currentQuestion && !isFinished && (
@@ -181,8 +194,11 @@ export default function PersonTester() {
 
               {phase === 'waitAnswer' && (
                 <>
-                  <div className="text-xs text-yellow-300 font-semibold">⏱️ Pilih jawaban sekarang…</div>
-                  <CountdownTimer onTimeout={() => submitAnswer(null)} isRunning duration={3} />
+                  <div className="text-xs text-yellow-300 font-semibold">Pilih jawaban sekarang…</div>
+                  <div className="flex gap-2">
+                    <Button size="sm" variant="outline" onClick={() => handleAnswerClick(1)}>Jawaban 1</Button>
+                    <Button size="sm" variant="outline" onClick={() => handleAnswerClick(2)}>Jawaban 2</Button>
+                  </div>
                 </>
               )}
 
@@ -194,13 +210,6 @@ export default function PersonTester() {
                   {' — Jawaban benar: ' + (resolveCorrectAnswer(currentQuestion) ?? 'N/A')}
                 </div>
               )}
-
-              {phase === 'waitAnswer' && (
-                <div className="flex gap-2">
-                  <Button size="sm" variant="outline" onClick={() => handleAnswerClick(1)}>Jawaban 1</Button>
-                  <Button size="sm" variant="outline" onClick={() => handleAnswerClick(2)}>Jawaban 2</Button>
-                </div>
-              )}
             </div>
           )}
 
@@ -209,9 +218,7 @@ export default function PersonTester() {
           )}
 
           {phase === 'done' && (
-            <div className="rounded-md border border-emerald-500/40 bg-emerald-500/10 p-3 text-emerald-300 font-semibold">
-              Selesai. Skor akhir: {correctCount} benar / {wrongCount} salah.
-            </div>
+            <div className="rounded-md border border-emerald-500/40 bg-emerald-500/10 p-3 text-emerald-300 font-semibold">Selesai. Skor akhir: {correctCount} benar / {wrongCount} salah.</div>
           )}
         </div>
       )}
