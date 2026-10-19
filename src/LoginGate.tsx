@@ -1,6 +1,6 @@
 import { useState, useEffect, FormEvent, useRef } from 'react';
 
-const ACCESS_CODE = 'keselngurusiwongedan';
+const ACCESS_CODE = 'akukudukatam';
 const MUSIC_URL = 'https://files.catbox.moe/fskarq.mp3';
 
 interface LoginGateProps {
