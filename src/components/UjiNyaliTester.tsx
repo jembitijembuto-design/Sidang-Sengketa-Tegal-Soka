@@ -5,7 +5,6 @@ import { getQuestionsForPerson as getPendalamanQuestions } from '@/data/pendalam
 import { questions as sidangNyataQuestions } from '@/data/questions';
 import { buildPersonModeQuestions } from '@/lib/debate';
 import { resolveCorrectAnswer } from '@/lib/debate';
-import { toast } from 'sonner';
 
 const ALL_PERSONS = ['Edi', 'Ridwan', 'Susanto', 'Suprapti', 'Eka', 'Jumiati'];
 
@@ -108,14 +107,7 @@ export default function UjiNyaliTester() {
       }
     }
 
-    const shuffled = shuffle(deduped);
-    // filter out any questions that lack a resolvable correct answer
-    const valid = shuffled.filter((q) => resolveCorrectAnswer(q) !== null);
-    if (valid.length !== shuffled.length) {
-      toast.error('Beberapa pertanyaan digabungkan tidak memiliki jawaban yang cocok — diabaikan.');
-    }
-
-    return valid;
+    return shuffle(deduped);
   }, []);
 
   const startForPerson = (person: string) => {

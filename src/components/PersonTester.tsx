@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { getQuestionsForPerson } from '@/data/duelMode';
 import { resolveCorrectAnswer } from '@/lib/debate';
-import { toast } from 'sonner';
 
 const ALL_PERSONS = ['Edi', 'Ridwan', 'Susanto', 'Suprapti', 'Eka', 'Jumiati'];
 type Phase = 'idle' | 'question' | 'waitAnswer' | 'result' | 'done';
@@ -121,23 +120,18 @@ export default function PersonTester() {
     const pool = getQuestionsForPerson(person);
     const arranged = interleaveByRole(pool);
 
-    // Pastikan hanya pertanyaan yang punya jawaban dapat digunakan
-    const valid = arranged.filter((q) => resolveCorrectAnswer(q) !== null);
-    if (valid.length !== arranged.length) {
-      toast.error('Beberapa pertanyaan tidak memiliki jawaban yang cocok di bank jawaban — diabaikan.');
-    }
-
+    // Gunakan seluruh pool — resolveCorrectAnswer memiliki fallback setIndex+1
     setSelectedPerson(person);
-    setQuestions(valid);
+    setQuestions(arranged);
     setCurrentIndex(0);
     setSelectedAnswer(null);
     setCorrectCount(0);
     setWrongCount(0);
     setPhase('idle');
 
-    if (valid.length > 0) {
+    if (arranged.length > 0) {
       setTimeout(() => {
-        const q = valid[0];
+        const q = arranged[0];
         setCurrentIndex(0);
         setPhase('question');
         if (q) {
@@ -194,7 +188,7 @@ export default function PersonTester() {
 
               {phase === 'waitAnswer' && (
                 <>
-                  <div className="text-xs text-yellow-300 font-semibold">Pilih jawaban sekarang…</div>
+                  <div className="text-xs text-yellow-300 font-semibold">⏱️ Pilih jawaban sekarang…</div>
                   <div className="flex gap-2">
                     <Button size="sm" variant="outline" onClick={() => handleAnswerClick(1)}>Jawaban 1</Button>
                     <Button size="sm" variant="outline" onClick={() => handleAnswerClick(2)}>Jawaban 2</Button>
