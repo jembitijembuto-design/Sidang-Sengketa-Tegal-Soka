@@ -1,0 +1,1 @@
+{"scripts": {"validate:questions": "ts-node ./scripts/validate-questions.ts"}}
