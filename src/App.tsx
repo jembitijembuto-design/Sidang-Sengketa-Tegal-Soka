@@ -14,7 +14,24 @@ import PunishmentButtons from '@/components/PunishmentButtons';
 import RewardButtons from '@/components/RewardButtons';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Play, Pause, Square, SkipForward, SkipBack, Volume2, VolumeX, Shuffle, ShieldAlert, MessageSquareWarning, BookOpen, Gavel, Landmark, Dices, Swords, Users } from 'lucide-react';
+import {
+  Play,
+  Pause,
+  Square,
+  SkipForward,
+  SkipBack,
+  Volume2,
+  VolumeX,
+  Shuffle,
+  ShieldAlert,
+  MessageSquareWarning,
+  BookOpen,
+  Gavel,
+  Landmark,
+  Dices,
+  Swords,
+  Users,
+} from 'lucide-react';
 import { Toaster } from '@/components/ui/sonner';
 import { toast } from 'sonner';
 import { getRandomProlog } from '@/data/prologues';
@@ -27,6 +44,7 @@ function shuffleVariedPattern(questions: FlatQuestion[]): FlatQuestion[] {
     if (!groups[q.person]) groups[q.person] = [];
     groups[q.person].push(q);
   }
+
   const persons = Object.keys(groups);
   for (const key of persons) {
     const g = groups[key];
@@ -35,14 +53,16 @@ function shuffleVariedPattern(questions: FlatQuestion[]): FlatQuestion[] {
       [g[i], g[j]] = [g[j], g[i]];
     }
   }
+
   const buckets: Record<string, FlatQuestion[]> = {};
   for (const p of persons) buckets[p] = [...groups[p]];
+
   const result: FlatQuestion[] = [];
   let lastPerson = '';
-  while (Object.values(buckets).some(b => b.length > 0)) {
-    const available = persons.filter(p => buckets[p].length > 0);
+  while (Object.values(buckets).some((b) => b.length > 0)) {
+    const available = persons.filter((p) => buckets[p].length > 0);
     if (available.length === 0) break;
-    const candidates = available.filter(p => p !== lastPerson);
+    const candidates = available.filter((p) => p !== lastPerson);
     const pickPerson = candidates.length > 0 ? candidates[Math.floor(Math.random() * candidates.length)] : available[0];
     const rand = Math.random();
     const burstSize = rand < 0.6 ? 1 : rand < 0.9 ? 2 : 3;
@@ -52,6 +72,7 @@ function shuffleVariedPattern(questions: FlatQuestion[]): FlatQuestion[] {
     }
     lastPerson = pickPerson;
   }
+
   return result;
 }
 
@@ -62,6 +83,7 @@ function shuffleDecoy(questions: FlatQuestion[]): FlatQuestion[] {
     if (!clusters[key]) clusters[key] = [];
     clusters[key].push(q);
   }
+
   const clusterKeys = Object.keys(clusters);
   for (const key of clusterKeys) {
     const arr = clusters[key];
@@ -70,18 +92,21 @@ function shuffleDecoy(questions: FlatQuestion[]): FlatQuestion[] {
       [arr[i], arr[j]] = [arr[j], arr[i]];
     }
   }
+
   const roleOrder: Array<'duit semilyar' | 'urip kepenak' | 'Kamulyan jagad'> = ['duit semilyar', 'urip kepenak', 'Kamulyan jagad'];
   for (let i = roleOrder.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [roleOrder[i], roleOrder[j]] = [roleOrder[j], roleOrder[i]];
   }
+
   const result: FlatQuestion[] = [];
   for (const role of roleOrder) {
-    const roleKeys = clusterKeys.filter(k => k.startsWith(role));
+    const roleKeys = clusterKeys.filter((k) => k.startsWith(role));
     for (let i = roleKeys.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [roleKeys[i], roleKeys[j]] = [roleKeys[j], roleKeys[i]];
     }
+
     for (const key of roleKeys) {
       const group = clusters[key];
       const sorted: FlatQuestion[] = [];
@@ -90,22 +115,26 @@ function shuffleDecoy(questions: FlatQuestion[]): FlatQuestion[] {
         if (!byPerson[q.person]) byPerson[q.person] = [];
         byPerson[q.person].push(q);
       }
+
       const persons = Object.keys(byPerson);
       for (let i = persons.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [persons[i], persons[j]] = [persons[j], persons[i]];
       }
+
       let lastP = '';
-      while (persons.some(p => byPerson[p].length > 0)) {
-        const avail = persons.filter(p => byPerson[p].length > 0);
-        const cands = avail.filter(p => p !== lastP);
+      while (persons.some((p) => byPerson[p].length > 0)) {
+        const avail = persons.filter((p) => byPerson[p].length > 0);
+        const cands = avail.filter((p) => p !== lastP);
         const pick = cands.length > 0 ? cands[Math.floor(Math.random() * cands.length)] : avail[0];
         sorted.push(byPerson[pick].shift()!);
         lastP = pick;
       }
+
       result.push(...sorted);
     }
   }
+
   return result;
 }
 
@@ -120,13 +149,13 @@ function buildDuelMixedQuestions(players: string[]): FlatQuestion[] {
     }
   };
 
-  const fromDuel = safeFlatten(duelSets).filter(q => q && players.includes(q.person));
+  const fromDuel = safeFlatten(duelSets).filter((q) => q && players.includes(q.person));
   const fromOther = [
     ...(getAllQuestions() || []),
     ...safeFlatten(pendalamanSets),
     ...safeFlatten(sidangNyataSets),
-    ...safeFlatten(keputusanSidangSets)
-  ].filter(q => q && players.includes(q.person));
+    ...safeFlatten(keputusanSidangSets),
+  ].filter((q) => q && players.includes(q.person));
 
   const byId: Record<number, FlatQuestion[]> = {};
   for (const q of fromDuel) {
@@ -167,7 +196,7 @@ const personGlowColors: Record<string, string> = {
   Susanto: 'text-sky-400',
   Suprapti: 'text-rose-400',
   Eka: 'text-amber-400',
-  Jumiati: 'text-teal-400'
+  Jumiati: 'text-teal-400',
 };
 
 const personGlowShadows: Record<string, string> = {
@@ -176,7 +205,7 @@ const personGlowShadows: Record<string, string> = {
   Susanto: '0 0 20px rgba(56,189,248,0.6), 0 0 40px rgba(56,189,248,0.3)',
   Suprapti: '0 0 20px rgba(251,113,133,0.6), 0 0 40px rgba(251,113,133,0.3)',
   Eka: '0 0 20px rgba(251,191,36,0.6), 0 0 40px rgba(251,191,36,0.3)',
-  Jumiati: '0 0 20px rgba(45,212,191,0.6), 0 0 40px rgba(45,212,191,0.3)'
+  Jumiati: '0 0 20px rgba(45,212,191,0.6), 0 0 40px rgba(45,212,191,0.3)',
 };
 
 type Phase = 'idle' | 'prolog' | 'playing' | 'waitAnswer' | 'feedback' | 'reward' | 'rewarding' | 'punishment' | 'punishing' | 'duelIdentify';
@@ -199,14 +228,18 @@ function loadSaldo(): Record<string, number> {
     if (!raw) return {};
     const parsed = JSON.parse(raw);
     if (typeof parsed === 'object' && parsed !== null) return parsed;
-  } catch { /* ignore */ }
+  } catch {
+    /* ignore */
+  }
   return {};
 }
 
 function saveSaldo(saldo: Record<string, number>) {
   try {
     localStorage.setItem(STORAGE_KEY_SALDO, JSON.stringify(saldo));
-  } catch { /* ignore */ }
+  } catch {
+    /* ignore */
+  }
 }
 
 function loadScores(): Record<string, { correct: number; wrong: number }> {
@@ -215,20 +248,24 @@ function loadScores(): Record<string, { correct: number; wrong: number }> {
     if (!raw) return {};
     const parsed = JSON.parse(raw);
     if (typeof parsed === 'object' && parsed !== null) return parsed;
-  } catch { /* ignore */ }
+  } catch {
+    /* ignore */
+  }
   return {};
 }
 
 function saveScores(scores: Record<string, { correct: number; wrong: number }>) {
   try {
     localStorage.setItem(STORAGE_KEY_SCORES, JSON.stringify(scores));
-  } catch { /* ignore */ }
+  } catch {
+    /* ignore */
+  }
 }
 
 function createInitialScores(): Record<string, { correct: number; wrong: number }> {
   const saved = loadScores();
   const init: Record<string, { correct: number; wrong: number }> = {};
-  ALL_PERSONS.forEach(p => {
+  ALL_PERSONS.forEach((p) => {
     init[p] = saved[p] ?? { correct: 0, wrong: 0 };
   });
   return init;
@@ -254,15 +291,9 @@ export default function App() {
   const [personMode, setPersonMode] = useState(false);
   const personModeRef = useRef(false);
   const [personTarget, setPersonTarget] = useState<string | null>(null);
-  // Uji Nyali mode
-  const [ujiNyaliMode, setUjiNyaliMode] = useState(false);
-  const ujiNyaliModeRef = useRef(false);
   const [duelPlayers, setDuelPlayers] = useState<string[]>([]);
   const duelPlayersRef = useRef<string[]>([]);
-  const [duelRound, setDuelRound] = useState<{
-    questions: FlatQuestion[];
-    targetPerson: string;
-  } | null>(null);
+  const [duelRound, setDuelRound] = useState<{ questions: FlatQuestion[]; targetPerson: string } | null>(null);
 
   const [duelSaldo, setDuelSaldo] = useState<Record<string, number>>(() => loadSaldo());
   const duelSaldoRef = useRef(duelSaldo);
@@ -282,15 +313,7 @@ export default function App() {
   const [isModeSwitching, setIsModeSwitching] = useState(false);
   const jogetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const {
-    speak,
-    speakFeedback,
-    pause,
-    resume,
-    stop,
-    isSpeaking,
-    isPaused
-  } = useSpeech();
+  const { speak, speakFeedback, pause, resume, stop, isSpeaking, isPaused } = useSpeech();
 
   const autoPlayRef = useRef(false);
   const currentIndexRef = useRef(0);
@@ -308,7 +331,7 @@ export default function App() {
     questionsRef.current = nextQuestions;
     setCurrentIndex(0);
     currentIndexRef.current = 0;
-    setSessionCount(c => c + 1);
+    setSessionCount((c) => c + 1);
     setPhase('idle');
     setLastResult(null);
     setDuelRound(null);
@@ -327,24 +350,6 @@ export default function App() {
   useEffect(() => { saveScores(scores); }, [scores]);
 
   useEffect(() => {
-    const TEN_MINUTES = 10 * 60 * 1000;
-    const announceStandings = () => {
-      const currentScores = scoresRef.current;
-      const currentSaldo = duelSaldoRef.current;
-      const parts: string[] = ['Update skor sepuluh menit sekali.'];
-      ALL_PERSONS.forEach(person => {
-        const s = currentScores[person] ?? { correct: 0, wrong: 0 };
-        const saldo = currentSaldo[person] ?? 0;
-        parts.push(`${person}: benar ${s.correct}, salah ${s.wrong}, saldo ${saldo.toLocaleString('id-ID')} rupiah.`);
-      });
-      const text = parts.join(' ');
-      speak(text);
-    };
-    const intervalId = setInterval(announceStandings, TEN_MINUTES);
-    return () => clearInterval(intervalId);
-  }, [speak]);
-
-  useEffect(() => {
     const video = videoRef.current;
     if (video) {
       video.muted = true;
@@ -352,15 +357,18 @@ export default function App() {
       video.loop = true;
       video.play().catch(() => {});
     }
+
     const audio = new Audio(OCEAN_AUDIO_URL);
     audio.loop = true;
     audio.volume = 0.35;
     oceanAudioRef.current = audio;
+
     const preloadApplause = new Audio(APPLAUSE_URLS[0]);
     preloadApplause.preload = 'auto';
     preloadApplause.volume = 0.01;
     preloadApplause.load();
     applauseRef.current = preloadApplause;
+
     const unlockMedia = () => {
       if (video) video.play().catch(() => {});
       if (audio) {
@@ -380,9 +388,11 @@ export default function App() {
       document.removeEventListener('click', unlockMedia);
       document.removeEventListener('touchstart', unlockMedia);
     };
+
     audio.play().catch(() => {});
     document.addEventListener('click', unlockMedia);
     document.addEventListener('touchstart', unlockMedia);
+
     return () => {
       document.removeEventListener('click', unlockMedia);
       document.removeEventListener('touchstart', unlockMedia);
@@ -396,8 +406,10 @@ export default function App() {
     if (isOceanMuted) {
       oceanAudioRef.current.volume = 0.85;
       oceanAudioRef.current.play().catch(() => {});
-    } else oceanAudioRef.current.volume = 0;
-    setIsOceanMuted(!isOceanMuted);
+    } else {
+      oceanAudioRef.current.volume = 0;
+    }
+    setIsOceanMuted((prev) => !prev);
   }, [isOceanMuted]);
 
   const playApplause = useCallback(() => {
@@ -418,12 +430,14 @@ export default function App() {
         main.pause();
         layer.pause();
       }, 6000);
-    } catch {/* */}
+    } catch {
+      /* */
+    }
   }, []);
 
   const transferDuel = useCallback((fromPerson: string, toPerson: string, amount: number) => {
     if (!duelModeRef.current || fromPerson === toPerson) return;
-    setDuelSaldo(prev => {
+    setDuelSaldo((prev) => {
       const next = { ...prev };
       next[fromPerson] = (next[fromPerson] ?? 0) - amount;
       next[toPerson] = (next[toPerson] ?? 0) + amount;
@@ -436,7 +450,7 @@ export default function App() {
     if (!duelModeRef.current || opponents.length === 0) return;
     const per = Math.floor(DUEL_BET / opponents.length);
     const remainder = DUEL_BET - per * opponents.length;
-    setDuelSaldo(prev => {
+    setDuelSaldo((prev) => {
       const next = { ...prev };
       next[loser] = (next[loser] ?? 0) - DUEL_BET;
       opponents.forEach((op, i) => {
@@ -449,9 +463,9 @@ export default function App() {
 
   const winDuelBet = useCallback((person: string) => {
     if (!duelModeRef.current) return;
-    setDuelSaldo(prev => ({
+    setDuelSaldo((prev) => ({
       ...prev,
-      [person]: (prev[person] ?? 0) + DUEL_BET
+      [person]: (prev[person] ?? 0) + DUEL_BET,
     }));
     toast(`💰 ${person} +Rp${DUEL_BET.toLocaleString('id-ID')}`);
   }, []);
@@ -464,7 +478,6 @@ export default function App() {
   useEffect(() => { undianModeRef.current = undianMode; }, [undianMode]);
   useEffect(() => { duelModeRef.current = duelMode; }, [duelMode]);
   useEffect(() => { personModeRef.current = personMode; }, [personMode]);
-+  useEffect(() => { ujiNyaliModeRef.current = ujiNyaliMode; }, [ujiNyaliMode]);
   useEffect(() => { duelPlayersRef.current = duelPlayers; }, [duelPlayers]);
   useEffect(() => { autoPlayRef.current = isAutoPlaying; }, [isAutoPlaying]);
   useEffect(() => { currentIndexRef.current = currentIndex; }, [currentIndex]);
@@ -490,6 +503,67 @@ export default function App() {
     return deepModeRef.current ? flattenSets(pendalamanSets) : getAllQuestions();
   }, [personTarget]);
 
+  const speakQuestionDirect = useCallback((index: number) => {
+    const q = questionsRef.current[index];
+    setPhase('playing');
+    setCurrentProlog(null);
+    speak(`Dari ${q.role}. ${q.text}`, () => setPhase('waitAnswer'));
+  }, [speak]);
+
+  const speakQuestion = useCallback((index: number) => {
+    const qs = questionsRef.current;
+    if (index >= qs.length) {
+      setIsAutoPlaying(false);
+      toast.success('Selesai semua pertanyaan.');
+      return;
+    }
+
+    const q = qs[index];
+    setLastResult(null);
+
+    if (duelModeRef.current) {
+      const players = duelPlayersRef.current;
+      const labels = ['A', 'B', 'C', 'D', 'E', 'F'];
+      const opponents = players.filter((p) => p !== q.person);
+      const decoys: FlatQuestion[] = [];
+      for (const op of opponents) {
+        const candidate = qs.find((sq) => sq.id === q.id && sq.person === op) || qs.find((sq) => sq.role === q.role && sq.person === op) || qs.find((sq) => sq.person === op);
+        if (candidate) decoys.push(candidate);
+      }
+      const roundQs = [q, ...decoys].sort(() => Math.random() - 0.5);
+      setDuelRound({ questions: roundQs, targetPerson: q.person });
+      const parts = [`Duel ${players.length} peserta! Yang ikut: ${players.join(', ')}. Dengarkan baik-baik!`];
+      for (let i = 0; i < roundQs.length; i++) {
+        parts.push(`Pertanyaan ${labels[i]}. Dari ${roundQs[i].role}. ${roundQs[i].text}`);
+      }
+      parts.push(`Pertanyaan mana milik ${q.person}?`);
+      setPhase('playing');
+      setCurrentProlog(null);
+      speak(parts.join('. '), () => setPhase('duelIdentify'));
+      return;
+    }
+
+    if (personModeRef.current) {
+      setPhase('playing');
+      speak(`Dari ${q.role}. ${q.text}`, () => setPhase('waitAnswer'));
+      return;
+    }
+
+    if (prologModeRef.current) {
+      const prolog = getRandomProlog(index, q.person, ALL_PERSONS);
+      setCurrentProlog(prolog);
+      setPhase('prolog');
+      speakFeedback(prolog, () => setTimeout(() => speakQuestionDirect(index), 600));
+    } else {
+      setPhase('playing');
+      speak(`Dari ${q.role}. ${q.text}`, () => setPhase('waitAnswer'));
+    }
+  }, [speak, speakFeedback, speakQuestionDirect]);
+
+  useEffect(() => {
+    speakQuestionRef.current = speakQuestion;
+  }, [speakQuestion]);
+
   const startQuizFromIndex = useCallback((index: number) => {
     const qs = questionsRef.current.length ? questionsRef.current : shuffledQuestions;
     const safeIndex = Math.min(Math.max(index, 0), Math.max(qs.length - 1, 0));
@@ -511,10 +585,11 @@ export default function App() {
     if (next >= qs.length) {
       const newQuestions = decoyModeRef.current ? shuffleDecoy(getQuestions()) : shuffleVariedPattern(getQuestions());
       applyQuestions(newQuestions);
-      setSessionCount(c => c + 1);
+      setSessionCount((c) => c + 1);
       toast.success('Sesi selesai! Diacak ulang!');
       return;
     }
+
     setCurrentIndex(next);
     currentIndexRef.current = next;
     if (autoPlayRef.current) speakQuestionRef.current(next);
@@ -522,7 +597,7 @@ export default function App() {
 
   const resetScores = useCallback(() => {
     const init: Record<string, { correct: number; wrong: number }> = {};
-    ALL_PERSONS.forEach(p => {
+    ALL_PERSONS.forEach((p) => {
       init[p] = { correct: 0, wrong: 0 };
     });
     setScores(init);
@@ -544,9 +619,6 @@ export default function App() {
     setPersonMode(false);
     personModeRef.current = false;
     setPersonTarget(null);
-    // nonaktifkan uji nyali juga
-    setUjiNyaliMode(false);
-    ujiNyaliModeRef.current = false;
   }, []);
 
   const handleToggleProlog = useCallback(() => {
@@ -663,9 +735,9 @@ export default function App() {
     setDuelMode(true);
     duelModeRef.current = true;
 
-    setDuelSaldo(prev => {
+    setDuelSaldo((prev) => {
       const next = { ...prev };
-      picked.forEach(p => {
+      picked.forEach((p) => {
         if (next[p] === undefined) {
           next[p] = DUEL_START_SALDO;
         }
@@ -703,14 +775,14 @@ export default function App() {
       transferDuel(cq.person, selectedQ.person, DUEL_BET);
       setPhase('feedback');
       setLastResult('wrong');
-      setScores(prev => ({
+      setScores((prev) => ({
         ...prev,
         [cq.person]: {
           ...prev[cq.person],
-          wrong: prev[cq.person].wrong + 1
-        }
+          wrong: prev[cq.person].wrong + 1,
+        },
       }));
-      const correctIdx = duelRound.questions.findIndex(rq => rq.person === cq.person);
+      const correctIdx = duelRound.questions.findIndex((rq) => rq.person === cq.person);
       const label = String.fromCharCode(65 + Math.max(0, correctIdx));
       speakFeedback(`Salah! Itu milik ${selectedQ.person}! ${cq.person} bayar ke ${selectedQ.person}. Yang benar Pertanyaan ${label}!`, () => setPhase('punishment'));
     }
@@ -727,88 +799,33 @@ export default function App() {
     toast.success('Diacak ulang! Saldo & skor tetap tersimpan.');
   }, [applyQuestions, getQuestions, isModeSwitching, stop]);
 
-  const speakQuestionDirect = useCallback((index: number) => {
-    const q = questionsRef.current[index];
-    setPhase('playing');
-    setCurrentProlog(null);
-    speak(`Dari ${q.role}. ${q.text}`, () => setPhase('waitAnswer'));
-  }, [speak]);
-
-  const speakQuestion = useCallback((index: number) => {
-    const qs = questionsRef.current;
-    if (index >= qs.length) {
-      setIsAutoPlaying(false);
-      toast.success('Selesai semua pertanyaan.');
-      return;
-    }
-    const q = qs[index];
-    setLastResult(null);
-    if (duelModeRef.current) {
-      const players = duelPlayersRef.current;
-      const labels = ['A', 'B', 'C', 'D', 'E', 'F'];
-      const opponents = players.filter(p => p !== q.person);
-      const decoys: FlatQuestion[] = [];
-      for (const op of opponents) {
-        const candidate = qs.find(sq => sq.id === q.id && sq.person === op) || qs.find(sq => sq.role === q.role && sq.person === op) || qs.find(sq => sq.person === op);
-        if (candidate) decoys.push(candidate);
-      }
-      const roundQs = [q, ...decoys].sort(() => Math.random() - 0.5);
-      setDuelRound({ questions: roundQs, targetPerson: q.person });
-      const parts = [`Duel ${players.length} peserta! Yang ikut: ${players.join(', ')}. Dengarkan baik-baik!`];
-      for (let i = 0; i < roundQs.length; i++) {
-        parts.push(`Pertanyaan ${labels[i]}. Dari ${roundQs[i].role}. ${roundQs[i].text}`);
-      }
-      parts.push(`Pertanyaan mana milik ${q.person}?`);
-      setPhase('playing');
-      setCurrentProlog(null);
-      speak(parts.join('. '), () => setPhase('duelIdentify'));
-      return;
-    }
-    if (personModeRef.current) {
-      setPhase('playing');
-      speak(`Dari ${q.role}. ${q.text}`, () => setPhase('waitAnswer'));
-      return;
-    }
-    if (prologModeRef.current) {
-      const prolog = getRandomProlog(index, q.person, ALL_PERSONS);
-      setCurrentProlog(prolog);
-      setPhase('prolog');
-      speakFeedback(prolog, () => setTimeout(() => speakQuestionDirect(index), 600));
-    } else {
-      setPhase('playing');
-      speak(`Dari ${q.role}. ${q.text}`, () => setPhase('waitAnswer'));
-    }
-  }, [speak, speakFeedback, speakQuestionDirect]);
-
-  useEffect(() => {
-    speakQuestionRef.current = speakQuestion;
-  }, [speakQuestion]);
-
   const handleAnswer = useCallback((chosenAnswer: 1 | 2) => {
     const q = questionsRef.current[currentIndexRef.current];
     const correctAnswer = resolveCorrectAnswer(q) ?? q.setIndex + 1;
     const isCorrect = chosenAnswer === correctAnswer;
     setPhase('feedback');
     setLastResult(isCorrect ? 'correct' : 'wrong');
-    setScores(prev => ({
+    setScores((prev) => ({
       ...prev,
       [q.person]: {
         correct: prev[q.person].correct + (isCorrect ? 1 : 0),
-        wrong: prev[q.person].wrong + (isCorrect ? 0 : 1)
-      }
+        wrong: prev[q.person].wrong + (isCorrect ? 0 : 1),
+      },
     }));
+
     if (duelModeRef.current) {
       if (isCorrect) {
         winDuelBet(q.person);
       } else {
-        const opsFromRound = duelRound ? duelRound.questions.map(x => x.person).filter(p => p !== q.person) : [];
-        const opponents = opsFromRound.length > 0 ? opsFromRound : duelPlayersRef.current.filter(p => p !== q.person);
+        const opsFromRound = duelRound ? duelRound.questions.map((x) => x.person).filter((p) => p !== q.person) : [];
+        const opponents = opsFromRound.length > 0 ? opsFromRound : duelPlayersRef.current.filter((p) => p !== q.person);
         payOpponents(q.person, opponents);
       }
     }
+
     const formal = sidangNyataModeRef.current || keputusanModeRef.current || undianModeRef.current;
-    const resultText = isCorrect ? formal ? 'Anda layak dapat sertifikat tanah!' : ' Kowe Jenule josss jisss!' : formal ? 'Anda tidak layak!' : 'Kowe ra sido entuk duit!';
-    const fullFeedback = `${resultText} Pertanyaan ini punya ${q.person}.${isCorrect ? '' : ` Jawaban yang benar adalah nomor ${correctAnswer}.`} `;
+    const resultText = isCorrect ? (formal ? 'Anda layak dapat sertifikat tanah!' : 'Kowe Jenule josss jisss!') : (formal ? 'Anda tidak layak!' : 'Kowe ra sido entuk duit!');
+    const fullFeedback = `${resultText} Pertanyaan ini punya ${q.person}.${isCorrect ? '' : ` Jawaban yang benar adalah nomor ${correctAnswer}.`}`;
     if (isCorrect) playApplause();
     speakFeedback(fullFeedback, () => {
       if (isCorrect) setTimeout(() => advanceToNext(), 800); else setPhase('punishment');
@@ -820,17 +837,19 @@ export default function App() {
     const correctAnswer = resolveCorrectAnswer(q) ?? q.setIndex + 1;
     setPhase('feedback');
     setLastResult('wrong');
-    setScores(prev => ({
+    setScores((prev) => ({
       ...prev,
       [q.person]: {
         ...prev[q.person],
-        wrong: prev[q.person].wrong + 1
-      }
+        wrong: prev[q.person].wrong + 1,
+      },
     }));
+
     if (duelModeRef.current) {
-      const opponents = duelPlayersRef.current.filter(p => p !== q.person);
+      const opponents = duelPlayersRef.current.filter((p) => p !== q.person);
       payOpponents(q.person, opponents);
     }
+
     const formal = sidangNyataModeRef.current || keputusanModeRef.current || undianModeRef.current;
     speakFeedback(formal ? `Waktunya habis! Anda tidak layak! Punya ${q.person}. Benar nomor ${correctAnswer}.` : `Waktunya habis! Kowe kok Washik! Punya ${q.person}. Benar nomor ${correctAnswer}.`, () => {
       setTimeout(() => advanceToNext(), 1000);
@@ -927,100 +946,271 @@ export default function App() {
   return (
     <div className="min-h-screen relative overflow-hidden">
       <div className="fixed inset-0 z-0 overflow-hidden">
-        <video ref={videoRef} autoPlay loop muted playsInline preload="auto" className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto -translate-x-1/2 -translate-y-1/2 object-cove[...]
-        <source src={OCEAN_VIDEO_URL} type="video/mp4" />
-      </video>
-      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/40" />
-    </div>
+        <video ref={videoRef} autoPlay loop muted playsInline preload="auto" className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto -translate-x-1/2 -translate-y-1/2 object-cover" >
+          <source src={OCEAN_VIDEO_URL} type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/40" />
+      </div>
 
-    <Toaster />
+      <Toaster />
 
-    <div className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
-      <div className="container mx-auto px-4 pt-3 flex items-start justify-between pointer-events-auto">
-        <div className='backdrop-blur-md border border-white/10 bg-[#08a61380] px-[5px] py-[5px] rounded-[2px] shadow-lg opacity-[0]'>
-          <h1 className="text-sm font-bold text-white flex items-center gap-1.5">
-            <Volume2 className="w-4 h-4 text-cyan-400" />
-            Narator Sidang SOKO
-          </h1>
-          <p className="text-[10px] text-white/60 mt-0.5">
-            {duelMode ? `⚔️ Duel ${duelPlayers.length}: ${duelPlayers.join(', ')}` : personMode ? personTarget ? `👤 Mode Person · ${personTarget}` : '👤 Mode Person' : undianMode ? '�[...]
-            {decoyMode ? ' • 🎭 Pengecoh' : ' • 🔀 Acak'}
-            {prologMode ? ' • 🎙️ Prolog' : ''}
-          </p>
+      <div className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
+        <div className="container mx-auto px-4 pt-3 flex items-start justify-between pointer-events-auto">
+          <div className="backdrop-blur-md border border-white/10 bg-[#08a61380] px-[5px] py-[5px] rounded-[2px] shadow-lg opacity-[0]">
+            <h1 className="text-sm font-bold text-white flex items-center gap-1.5">
+              <Volume2 className="w-4 h-4 text-cyan-400" />
+              Narator Sidang SOKO
+            </h1>
+            <p className="text-[10px] text-white/60 mt-0.5">
+              {duelMode ? `⚔️ Duel ${duelPlayers.length}: ${duelPlayers.join(', ')}` : personMode ? (personTarget ? `👤 Mode Person · ${personTarget}` : '👤 Mode Person') : undianMode ? '🎲 Undian' : '📝 Standar'}
+              {decoyMode ? ' • 🎭 Pengecoh' : ' • 🔀 Acak'}
+              {prologMode ? ' • 🎙️ Prolog' : ''}
+            </p>
+          </div>
+
+          <div className="flex items-center gap-1.5 flex-wrap justify-end">
+            <button onClick={toggleOceanSound} className="glow-btn glow-btn--cyan" title="Ombek" disabled={isModeSwitching}>
+              {isOceanMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-[#0fe7f2]" />}
+            </button>
+            <button onClick={handleToggleProlog} className={`glow-btn ${prologMode ? 'glow-btn--active glow-btn--yellow' : 'glow-btn--yellow'}`} disabled={isModeSwitching}>
+              <MessageSquareWarning className="w-4 h-4 text-[#fa0af6]" />
+            </button>
+            <button onClick={handleToggleDecoy} className={`glow-btn ${decoyMode ? 'glow-btn--active glow-btn--purple' : 'glow-btn--purple'}`} disabled={isModeSwitching}>
+              <ShieldAlert className="w-4 h-4 text-[#ed0707]" />
+            </button>
+            <button onClick={handleToggleDeep} className={`glow-btn ${deepMode ? 'glow-btn--active glow-btn--emerald' : 'glow-btn--emerald'}`} disabled={isModeSwitching}>
+              <BookOpen className="w-4 h-4 text-[#27e01d]" />
+            </button>
+            <button onClick={handleToggleSidangNyata} className={`glow-btn ${sidangNyataMode ? 'glow-btn--active glow-btn--red' : 'glow-btn--red'}`} disabled={isModeSwitching}>
+              <Gavel className="w-4 h-4 text-[#fa1111]" />
+            </button>
+            <button onClick={handleToggleKeputusan} className={`glow-btn ${keputusanMode ? 'glow-btn--active glow-btn--orange' : 'glow-btn--orange'}`} disabled={isModeSwitching}>
+              <Landmark className="w-4 h-4 text-[#0c17f0]" />
+            </button>
+            <button onClick={handleToggleUndian} className={`glow-btn ${undianMode ? 'glow-btn--active glow-btn--pink' : 'glow-btn--pink'}`} disabled={isModeSwitching}>
+              <Dices className="w-4 h-4" />
+            </button>
+
+            <button
+              onClick={() => {
+                if (isModeSwitching) return;
+                clearOtherModes();
+                setPersonMode(true);
+                personModeRef.current = true;
+                setPersonTarget(null);
+                setIsAutoPlaying(true);
+                autoPlayRef.current = true;
+                setPhase('idle');
+                setCurrentProlog(null);
+                toast.success('👤 Mode Person aktif — pilih peserta.');
+              }}
+              className={`glow-btn ${personMode ? 'glow-btn--active glow-btn--cyan' : 'glow-btn--cyan'}`}
+              title="Mode Person"
+              disabled={isModeSwitching}
+            >
+              <Users className="w-4 h-4" />
+            </button>
+
+            {([2, 3, 4, 5, 6] as const).map((n) => (
+              <button
+                key={n}
+                onClick={() => startDuel(n)}
+                className={`glow-btn ${duelMode && duelPlayers.length === n ? 'glow-btn--active glow-btn--amber' : 'glow-btn--amber'}`}
+                title={`Duel ${n}`}
+                disabled={isModeSwitching}
+              >
+                <Swords className="w-3 h-3 text-[#f5a30c]" />
+                <span className="text-[10px] ml-0.5 text-amber-200">{n}</span>
+              </button>
+            ))}
+
+            {duelMode && (
+              <button onClick={stopDuel} className="glow-btn glow-btn--red" title="Stop Duel" disabled={isModeSwitching}>
+                <span className="text-[10px] text-white">Stop</span>
+              </button>
+            )}
+
+            <button onClick={handleReshuffle} className="glow-btn glow-btn--sky" disabled={isModeSwitching}>
+              <Shuffle className="w-4 h-4" />
+            </button>
+            <Badge className="bg-black/50 text-white/80 border-white/20 text-[10px]">
+              {currentIndex + 1}/{shuffledQuestions.length}
+            </Badge>
+            <Badge className="bg-black/50 text-white/80 border-white/20 text-[10px]">
+              Sesi {sessionCount}
+            </Badge>
+          </div>
+        </div>
+      </div>
+
+      <main className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 py-20">
+        <div className="mb-4 w-full flex justify-center">
+          {personMode ? (
+            <div className="flex flex-wrap gap-2 justify-center">
+              {!personTarget ? ALL_PERSONS.map((person) => (
+                <Button key={person} size="sm" onClick={() => {
+                  if (isModeSwitching) return;
+                  const qs = buildPersonModeQuestions(person);
+                  setPersonTarget(person);
+                  personModeRef.current = true;
+                  setPersonMode(true);
+                  setCurrentProlog(null);
+                  setDuelRound(null);
+                  setCurrentIndex(0);
+                  setIsAutoPlaying(true);
+                  autoPlayRef.current = true;
+                  applyQuestions(qs);
+                  toast.success(`👤 Person ${person} dipilih — mode utama dijalankan.`);
+                }} disabled={isModeSwitching}>{person}</Button>
+              )) : (
+                <div className="flex items-center gap-3">
+                  <div className="text-white">Peserta terpilih: <strong className="ml-2">{personTarget}</strong></div>
+                  <Button size="sm" variant="outline" onClick={() => {
+                    if (isModeSwitching) return;
+                    setPersonTarget(null);
+                    setPersonMode(false);
+                    personModeRef.current = false;
+                    const prepared = shuffleVariedPattern(getAllQuestions());
+                    applyQuestions(prepared);
+                    toast.success('👤 Mode Person dinonaktifkan.');
+                  }} disabled={isModeSwitching}>Batal</Button>
+                </div>
+              )}
+            </div>
+          ) : null}
         </div>
 
-        <div className="flex items-center gap-1.5 flex-wrap justify-end">
-          <button onClick={toggleOceanSound} className="glow-btn glow-btn--cyan" title="Ombek" disabled={isModeSwitching}>
-            {isOceanMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-[#0fe7f2]" />}
-          </button>
-          <button onClick={handleToggleProlog} className={`glow-btn ${prologMode ? 'glow-btn--active glow-btn--yellow' : 'glow-btn--yellow'}`} disabled={isModeSwitching}>
-            <MessageSquareWarning className="w-4 h-4 text-[#fa0af6]" />
-          </button>
-          <button onClick={handleToggleDecoy} className={`glow-btn ${decoyMode ? 'glow-btn--active glow-btn--purple' : 'glow-btn--purple'}`} disabled={isModeSwitching}>
-            <ShieldAlert className="w-4 h-4 text-[#ed0707]" />
-          </button>
-          <button onClick={handleToggleDeep} className={`glow-btn ${deepMode ? 'glow-btn--active glow-btn--emerald' : 'glow-btn--emerald'}`} disabled={isModeSwitching}>
-            <BookOpen className="w-4 h-4 text-[#27e01d]" />
-          </button>
-          <button onClick={handleToggleSidangNyata} className={`glow-btn ${sidangNyataMode ? 'glow-btn--active glow-btn--red' : 'glow-btn--red'}`} disabled={isModeSwitching}>
-            <Gavel className="w-4 h-4 text-[#fa1111]" />
-          </button>
-          <button onClick={handleToggleKeputusan} className={`glow-btn ${keputusanMode ? 'glow-btn--active glow-btn--orange' : 'glow-btn--orange'}`} disabled={isModeSwitching}>
-            <Landmark className="w-4 h-4 text-[#0c17f0]" />
-          </button>
-          <button onClick={handleToggleUndian} className={`glow-btn ${undianMode ? 'glow-btn--active glow-btn--pink' : 'glow-btn--pink'}`} disabled={isModeSwitching}>
-            <Dices className="w-4 h-4" />
-          </button>
+        {Object.keys(duelSaldo).length > 0 && (
+          <div className="mb-3 flex flex-wrap gap-2 justify-center max-w-lg">
+            {ALL_PERSONS.filter((p) => duelSaldo[p] !== undefined).map((p) => (
+              <div key={p} className="bg-black/60 border border-amber-400/40 rounded-lg px-3 py-1 text-xs text-white">
+                <span className={`font-bold ${personGlowColors[p]}`}>{p}</span>
+                <span className={`ml-2 font-semibold ${(duelSaldo[p] ?? 0) >= DUEL_START_SALDO ? 'text-emerald-300' : (duelSaldo[p] ?? 0) > 0 ? 'text-amber-300' : 'text-red-400'}`}>
+                  Rp{(duelSaldo[p] ?? 0).toLocaleString('id-ID')}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
 
-          <button onClick={() => {
-            if (isModeSwitching) return;
-            clearOtherModes();
-            setPersonMode(true);
-            personModeRef.current = true;
-            setPersonTarget(null);
-            setIsAutoPlaying(true);
-            autoPlayRef.current = true;
-            setPhase('idle');
-            setCurrentProlog(null);
-            toast.success('👤 Mode Person aktif — pilih peserta.');
-          }} className={`glow-btn ${personMode ? 'glow-btn--active glow-btn--cyan' : 'glow-btn--cyan'}`} title="Mode Person" disabled={isModeSwitching}>
-            <Users className="w-4 h-4" />
-          </button>
+        {currentProlog && phase === 'prolog' && (
+          <div className="mb-4 text-center">
+            <p className="text-base font-bold italic text-cyan-300 animate-pulse px-4" style={{ textShadow: '0 0 20px rgba(34,211,238,0.7)' }}>
+              🎙️ “{currentProlog}”
+            </p>
+          </div>
+        )}
 
-+            <button
-+              onClick={() => {
-+                if (isModeSwitching) return;
-+                clearOtherModes();
-+                setUjiNyaliMode(true);
-+                ujiNyaliModeRef.current = true;
-+                setPersonMode(false);
-+                personModeRef.current = false;
-+                setDuelMode(false);
-+                duelModeRef.current = false;
-+                setSidangNyataMode(false);
-+                sidangNyataModeRef.current = false;
-+                setDeepMode(false);
-+                deepModeRef.current = false;
-+                setKeputusanMode(false);
-+                keputusanModeRef.current = false;
-+                setUndianMode(false);
-+                undianModeRef.current = false;
-+                setPersonTarget(null);
-+                setPhase('idle');
-+                setCurrentProlog(null);
-+                toast.success('🧠 Uji Nyali aktif — pilih peserta di panel Uji Nyali.');
-+              }}
-+              className={`glow-btn ${ujiNyaliMode ? 'glow-btn--active glow-btn--indigo' : 'glow-btn--indigo'}`}
-+              title="Uji Nyali"
-+              disabled={isModeSwitching}
-+            >
-+              <Users className="w-4 h-4" />
-+            </button>
+        {currentQ && isActive && !duelMode && (
+          <div className="mb-2 text-center flex flex-col items-center gap-0.5 bg-[#3d1111]">
+            <span className="text-[#0cf70c]" style={{ textShadow: personGlowShadows[currentQ.person] }}>{currentQ.person}</span>
+            <span className="text-[#0ef00e]" style={{ opacity: 0.85 }}>Jawaban {resolveCorrectAnswer(currentQ) ?? currentQ.setIndex + 1}</span>
+          </div>
+        )}
 
-          {([2, 3, 4, 5, 6] as const).map(n => (
-            <button key={n} onClick={() => startDuel(n)} className={`glow-btn ${duelMode && duelPlayers.length === n ? 'glow-btn--active glow-btn--amber' : 'glow-btn--amber'}`} title={`Duel ${n[...]
-              <Swords className="w-3 h-3 text-[#f5a30c]" />
-              <span className="text-[10px] ml-0.5 text-amber-200">{n}</span>
-            </button>
-          ))}
- [TRUNCATED]
+        {duelMode && duelRound && isActive && (
+          <div className="mb-3 text-center">
+            <p className="text-amber-400 font-bold text-sm mb-2 tracking-widest">⚔️ DUEL {duelPlayers.length} · Rp{DUEL_BET.toLocaleString('id-ID')} pindah tangan ⚔️</p>
+            <div className="flex items-center justify-center gap-3 flex-wrap">
+              {duelPlayers.map((p) => (
+                <span key={p} className={`text-xl sm:text-2xl font-black ${personGlowColors[p]} animate-pulse`} style={{ textShadow: personGlowShadows[p] }}>{p}</span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {lastResult && (
+          <div className="mb-3 text-center">
+            <span className="text-[#ebdada]">
+              {lastResult === 'correct' ? formalMode ? '📜 LAYAK SERTIFIKAT!' : '🔥 JOSSS JISSS!' : formalMode ? '⚖️ TIDAK LAYAK!' : '❌ RA SIDO ENTUK DUIT!'}
+            </span>
+            {currentQ && (
+              <p className="text-sm text-white/70 mt-1">
+                Punya <strong className="text-white">{currentQ.person}</strong>
+                {lastResult === 'wrong' && (
+                  <span className="block font-bold text-[#ede1e1]">
+                    Benar: Jawaban {resolveCorrectAnswer(currentQ) ?? currentQ.setIndex + 1}
+                  </span>
+                )}
+              </p>
+            )}
+          </div>
+        )}
+
+        {currentQ && phase !== 'duelIdentify' && (
+          <div className="w-full max-w-md" style={{ animation: 'float 4s ease-in-out infinite' }}>
+            <QuestionCard question={{ ...currentQ, globalIndex: currentIndex + 1 }} isActive={isSpeaking} isCurrent showPerson={phase !== 'idle' && phase !== 'prolog'} />
+          </div>
+        )}
+
+        {phase === 'duelIdentify' && duelRound && currentQ && (
+          <div className="mt-4 w-full max-w-md space-y-3">
+            <p className="text-center text-white font-bold text-lg mb-4" style={{ textShadow: '0 0 20px rgba(251,191,36,0.7)' }}>
+              ⚔️ Pertanyaan mana milik <span className={personGlowColors[currentQ.person]} style={{ textShadow: personGlowShadows[currentQ.person] }}>{currentQ.person}</span>?
+            </p>
+            {duelRound.questions.map((dq, i) => (
+              <button key={i} onClick={() => handleDuelIdentify(i)} className="w-full p-4 rounded-xl bg-black/50 border border-white/20 text-white text-left hover:border-amber-400/50 transition-colors duration-200">
+                <span className="font-bold text-amber-400">Pertanyaan {String.fromCharCode(65 + i)}</span>
+                <p className="mt-2 text-sm text-white/90">{dq.text}</p>
+              </button>
+            ))}
+          </div>
+        )}
+
+        {phase === 'waitAnswer' && currentQ && (
+          <div className="mt-2 w-full max-w-md">
+            <AnswerButtons onAnswer={handleAnswer} person={currentQ.person} />
+          </div>
+        )}
+
+        {phase === 'reward' && (
+          <div className="mt-4 w-full max-w-md">
+            <RewardButtons onReward={handleReward} />
+          </div>
+        )}
+
+        {phase === 'punishment' && (
+          <div className="mt-4 w-full max-w-md">
+            {formalMode ? <SidangNyataPunishment onPunishment={handlePunishment} /> : <PunishmentButtons onPunishment={handlePunishment} onJoget={handleJoget} />}
+          </div>
+        )}
+
+        <div className="mt-3 w-full max-w-md h-1.5 bg-white/10 rounded-full overflow-hidden">
+          <div className="h-full bg-primary rounded-full transition-all duration-500" style={{ width: `${progress}%` }} />
+        </div>
+
+        <div className="flex items-center justify-center gap-2 mt-4">
+          <Button variant="outline" size="sm" onClick={handlePrev} disabled={currentIndex === 0 || ['waitAnswer', 'punishment', 'reward', 'duelIdentify'].includes(phase) || isModeSwitching} className="bg-black/40 border-white/20 text-white">
+            <SkipBack className="w-4 h-4" />
+          </Button>
+          {isSpeaking && !isPaused ? (
+            <Button size="sm" onClick={handlePause} className="px-6" disabled={isModeSwitching}>
+              <Pause className="w-4 h-4 mr-1" /> Jeda
+            </Button>
+          ) : (
+            <Button size="sm" onClick={handlePlay} className="px-6" disabled={['waitAnswer', 'punishment', 'punishing', 'reward', 'rewarding', 'duelIdentify'].includes(phase) || isModeSwitching}>
+              <Play className="w-4 h-4 mr-1 text-[#1af00e]" />
+              {isPaused ? 'Lanjut' : isAutoPlaying ? 'Lanjut' : 'Mulai'}
+            </Button>
+          )}
+          <Button variant="outline" size="sm" onClick={handleStop} disabled={phase === 'idle' || isModeSwitching} className="bg-black/40 border-white/20 text-white">
+            <Square className="w-4 h-4" />
+          </Button>
+          <Button variant="outline" size="sm" onClick={handleNext} disabled={currentIndex >= shuffledQuestions.length - 1 || isModeSwitching} className="bg-black/40 border-white/20 text-white">
+            <SkipForward className="w-4 h-4 text-[#1d0eeb]" />
+          </Button>
+        </div>
+      </main>
+
+      {jogetVideo && (
+        <div className="fixed inset-0 z-[100] bg-black/90 flex flex-col items-center justify-center p-4">
+          <div className="w-full max-w-3xl aspect-video rounded-xl overflow-hidden border-2 border-yellow-400/50">
+            <video autoPlay loop muted playsInline preload="auto" src={JOGET_VIDEO_URL} className="w-full h-full" />
+          </div>
+          <p className="text-yellow-300 font-bold text-lg mt-4 animate-pulse">💃 Joget 3 menit!</p>
+          <Button variant="outline" size="sm" onClick={closeJogetVideo} className="mt-3 border-white/30 text-white">⏭️ Lewati</Button>
+        </div>
+      )}
+    </div>
+  );
+}
